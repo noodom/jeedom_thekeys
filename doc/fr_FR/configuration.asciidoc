@@ -1,0 +1,5 @@
+==== Configuration du plugin
+
+Le plugin ne comporte pas de configuration générale.
+
+Il faut configurer l'adresse, l'utilisateur et le mot de passe de la gateway The Keys dans l'équipement.
