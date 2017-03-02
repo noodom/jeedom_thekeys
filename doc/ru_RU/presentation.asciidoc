@@ -1,0 +1,3 @@
+==== The Keys, serrure connectée
+
+Ce plugin permet d'interconnecter Jeedom avec un gateway The Keys gérant une serrure connectée.
