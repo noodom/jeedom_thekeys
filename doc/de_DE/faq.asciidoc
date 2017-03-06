@@ -1,5 +1,5 @@
 [panel,primary]
-.Est-ce que le plugin s'appuie sur des API cloud ?
+.Stützt sich das Plugin auf eine Cloud-API ?
 --
-Non, le plugin est en connexion directe avec la gateway The Keys
+Nein, das Plugin ist in direkter Verbindung mit dem "The Keys" Gateway
 --
