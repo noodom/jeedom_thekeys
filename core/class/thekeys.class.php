@@ -37,6 +37,7 @@ class thekeys extends eqLogic {
         $headers = [
             'Authorization: Bearer ' . config::byKey('token','thekeys')
         ];
+        log::add('thekeys', 'debug', 'Headers : ' . $headers[0]);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         $retour = json_decode(curl_exec($curl), true);
         curl_close ($curl);
@@ -70,6 +71,7 @@ class thekeys extends eqLogic {
         config::save('token', $retour['token'],  'thekeys');
         config::save('timestamp', $timestamp,  'thekeys');
         log::add('thekeys', 'debug', 'Retour : ' . $retour['token']);
+        return;
     }
 
 }
