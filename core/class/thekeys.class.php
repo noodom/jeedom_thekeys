@@ -66,13 +66,12 @@ class thekeys extends eqLogic {
         rtrim($fields_string, '&');
         curl_setopt($curl,CURLOPT_POST, count($fields));
         curl_setopt($curl,CURLOPT_POSTFIELDS, $fields_string);
-        $retour = curl_exec($curl);
-        $json = json_decode($retour, true);
+        $json = json_decode(curl_exec($curl), true);
         curl_close ($curl);
         $timestamp = time() + (2 * 60 * 60);
         config::save('token', $json['token'],  'thekeys');
         config::save('timestamp', $timestamp,  'thekeys');
-        log::add('thekeys', 'debug', 'Retour : ' . $retour);
+        log::add('thekeys', 'debug', 'Retour : ' . print_r($json));
         return;
     }
 
