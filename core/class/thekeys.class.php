@@ -39,8 +39,9 @@ class thekeys extends eqLogic {
         ];
         log::add('thekeys', 'debug', 'Headers : ' . $headers[0]);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        $retour = json_decode(curl_exec($curl), true);
+        $retour = curl_exec($curl);
         curl_close ($curl);
+        $json = json_decode($retour, true);
 
         log::add('thekeys', 'debug', 'Retour : ' . $retour);
     }
@@ -65,12 +66,13 @@ class thekeys extends eqLogic {
         rtrim($fields_string, '&');
         curl_setopt($curl,CURLOPT_POST, count($fields));
         curl_setopt($curl,CURLOPT_POSTFIELDS, $fields_string);
-        $retour = json_decode(curl_exec($curl), true);
+        $retour = curl_exec($curl)
+        $json = json_decode($retour, true);
         curl_close ($curl);
         $timestamp = time() + (2 * 60 * 60);
-        config::save('token', $retour['token'],  'thekeys');
+        config::save('token', $json['token'],  'thekeys');
         config::save('timestamp', $timestamp,  'thekeys');
-        log::add('thekeys', 'debug', 'Retour : ' . $retour['token']);
+        log::add('thekeys', 'debug', 'Retour : ' . $retour);
         return;
     }
 
