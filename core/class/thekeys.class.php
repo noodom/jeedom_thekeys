@@ -24,11 +24,12 @@ class thekeys extends eqLogic {
     public function pageConf() {
         thekeys::authCloud();
         //$url = 'https://api.the-keys.fr/fr/api/v1/welcome';
-        $url = 'https://api.the-keys.fr/fr/api/v1/utilisateur/get/' . urlencode(config::byKey('username','thekeys'));
+        $url = 'utilisateur/get/' . urlencode(config::byKey('username','thekeys'));
         thekeys::callCloud($url);
     }
 
     public function callCloud($url) {
+        $url = 'https://api.the-keys.fr/fr/api/v1/' . $url . '?_format=json';
         if (time() > config::byKey('timestamp','thekeys')) {
             thekeys::authCloud($user,$pass);
         }
