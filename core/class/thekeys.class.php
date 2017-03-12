@@ -23,6 +23,7 @@ class thekeys extends eqLogic {
 
     public function pageConf() {
         thekeys::authCloud();
+        $url = 'https://api.the-keys.fr/fr/api/v1/welcome/');
         $url = 'https://api.the-keys.fr/fr/api/v1/get/' . urlencode(config::byKey('username','thekeys'));
         thekeys::callCloud($url);
     }
@@ -32,7 +33,7 @@ class thekeys extends eqLogic {
         if (time() > config::byKey('timestamp','thekeys')) {
             thekeys::authCloud($user,$pass);
         }
-        $header = array("Authorization: Bearer " . config::byKey('token','thekeys'));
+        $header = array('Authorization: Bearer ' . config::byKey('token','thekeys'));
         $opts = array( 'http' => array ('method'=>'GET',
         'header'=>$header));
         $ctx = stream_context_create($opts);
