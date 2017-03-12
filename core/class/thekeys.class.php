@@ -23,8 +23,8 @@ class thekeys extends eqLogic {
 
     public function pageConf() {
         thekeys::authCloud();
-        $url = 'https://api.the-keys.fr/fr/api/v1/welcome';
-        //$url = 'https://api.the-keys.fr/fr/api/v1/get/' . urlencode(config::byKey('username','thekeys'));
+        //$url = 'https://api.the-keys.fr/fr/api/v1/welcome';
+        $url = 'https://api.the-keys.fr/fr/api/v1/get/' . urlencode(config::byKey('username','thekeys'));
         thekeys::callCloud($url);
     }
 
@@ -43,7 +43,7 @@ class thekeys extends eqLogic {
         $json = json_decode(curl_exec($curl), true);
         curl_close ($curl);
 
-        log::add('thekeys', 'debug', 'Retour : ' . $retour);
+        log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
     }
 
     public function authCloud() {
@@ -72,7 +72,7 @@ class thekeys extends eqLogic {
         $timestamp = time() + (2 * 60 * 60);
         config::save('token', $json['token'],  'thekeys');
         config::save('timestamp', $timestamp,  'thekeys');
-        log::add('thekeys', 'debug', 'Retour : ' . print_r($json));
+        log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
         return;
     }
 
