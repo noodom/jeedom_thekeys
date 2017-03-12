@@ -22,33 +22,29 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class thekeys extends eqLogic {
 
     public function pageConf() {
-        thekeys::authCloud(config::byKey('username','thekeys'),config::byKey('password','thekeys'));
+        thekeys::authCloud();
+        $url = 'https://api.the-keys.fr/fr/api/v1/get' . urlencode(config::byKey('username','thekeys'));
+        thekeys::callCloud($url);
     }
 
-    public function callGateway($url,$user,$pass) {
+    public function callCloud($url) {
         $curl = curl_init();
         if (time() > config::byKey('timestamp','thekeys')) {
             thekeys::authCloud($user,$pass);
         }
-        log::add('thekeys', 'debug', 'Appel : ' . $url . ' avec ' . $user . ':' . $pass);
-
-        $auth = base64_encode($user . ':' . $pass);
-        $header = array("Authorization: Basic $auth");
+        $header = array("Authorization: Bearer " . config::byKey('token','thekeys'));
         $opts = array( 'http' => array ('method'=>'GET',
         'header'=>$header));
         $ctx = stream_context_create($opts);
         $retour = file_get_contents($url,false,$ctx);
 
-        //$temp = split("\r\n", $data[1]) ;
-
-        //$result = unserialize( $temp[2] ) ;
-
         log::add('thekeys', 'debug', 'Retour : ' . $retour);
     }
 
-    public function authCloud($user,$pass) {
+    public function authCloud() {
         $url = 'https://api.the-keys.fr/api/login_check';
-        log::add('thekeys', 'debug', 'Appel : ' . $url . ' avec ' . $user . ':' . $pass);
+        $user = config::byKey('username','thekeys');
+        $pass = config::byKey('password','thekeys');
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL,$url);
         curl_setopt($curl, CURLOPT_POST, 1);
@@ -70,7 +66,6 @@ class thekeys extends eqLogic {
         $timestamp = time() + (2 * 60 * 60);
         config::save('token', $retour['token'],  'thekeys');
         config::save('timestamp', $timestamp,  'thekeys');
-
         log::add('thekeys', 'debug', 'Retour : ' . $retour['token']);
     }
 
