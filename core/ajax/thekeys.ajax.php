@@ -24,6 +24,11 @@ try {
         throw new Exception(__('401 - Accès non autorisé', __FILE__));
     }
 
+    if (init('action') == 'postSave') {
+        thekeys::pageConf();
+        ajax::success();
+    }
+
 
     throw new Exception(__('Aucune methode correspondante à : ', __FILE__) . init('action'));
     /*     * *********Catch exeption*************** */

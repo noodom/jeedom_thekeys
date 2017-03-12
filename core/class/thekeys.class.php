@@ -21,52 +21,15 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 
 class thekeys extends eqLogic {
 
-    public function preUpdate() {
-        if ($this->getConfiguration('addr') == '') {
-            throw new Exception(__('L\'adresse ne peut être vide',__FILE__));
-        }
-    }
-
-    public function preSave() {
-        $this->setLogicalId($this->getConfiguration('addr'));
-    }
-
-
-    public function postUpdate() {
-        $cmd = thekeysCmd::byEqLogicIdAndLogicalId($this->getId(),'door');
-        if (!is_object($cmd)) {
-            $cmd = new thekeysCmd();
-            $cmd->setLogicalId('door');
-            $cmd->setIsVisible(1);
-            $cmd->setName(__('Ouverture Porte', __FILE__));
-        }
-        $cmd->setType('action');
-        $cmd->setSubType('other');
-        $cmd->setConfiguration('url','open-door.cgi');
-        $cmd->setEqLogic_id($this->getId());
-        $cmd->save();
-
-        $cmd = thekeysCmd::byEqLogicIdAndLogicalId($this->getId(),'dooropen');
-        if (!is_object($cmd)) {
-            $cmd = new thekeysCmd();
-            $cmd->setLogicalId('dooropen');
-            $cmd->setIsVisible(1);
-            $cmd->setName(__('Porte', __FILE__));
-        }
-        $cmd->setType('info');
-        $cmd->setSubType('binary');
-        $cmd->setDisplay('generic_type','LOCK_STATE');
-        $cmd->setConfiguration('returnStateValue',1);
-        $cmd->setConfiguration('returnStateTime',1);
-        $cmd->setTemplate("mobile",'lock');
-        $cmd->setTemplate("dashboard",'lock' );
-        $cmd->setEqLogic_id($this->getId());
-        $cmd->save();
-
+    public function pageConf() {
+        authCloud(config::byKey('username','thekeys'),config::byKey('password','thekeys'));
     }
 
     public function callGateway($url,$user,$pass) {
         $curl = curl_init();
+        if (time() > config::byKey('timestamp','thekeys')) {
+            thekeys::authCloud($user,$pass);
+        }
         log::add('thekeys', 'debug', 'Appel : ' . $url . ' avec ' . $user . ':' . $pass);
 
         $auth = base64_encode($user . ':' . $pass);
@@ -81,6 +44,33 @@ class thekeys extends eqLogic {
         //$result = unserialize( $temp[2] ) ;
 
         log::add('thekeys', 'debug', 'Retour : ' . $retour);
+    }
+
+    public function authCloud($user,$pass) {
+        $url = 'https://api.the-keys.fr/api/login_check';
+        log::add('thekeys', 'debug', 'Appel : ' . $url . ' avec ' . $user . ':' . $pass);
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL,$url);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        $headers = [
+            'Content-Type: application/x-www-form-urlencoded'
+        ];
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        $fields = array(
+        	'_username' => urlencode($user),
+        	'_password' => urlencode($pass),
+        );
+        foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
+        rtrim($fields_string, '&');
+        curl_setopt($curl,CURLOPT_POST, count($fields));
+        curl_setopt($curl,CURLOPT_POSTFIELDS, $fields_string);
+        $retour = json_decode(curl_exec($curl), true);
+        curl_close ($curl);
+        $timestamp = time() + (2 * 60 * 60);
+        config::save('token', $retour['token'],  'thekeys');
+        config::save('timestamp', $timestamp,  'thekeys');
+
+        log::add('thekeys', 'debug', 'Retour : ' . $retour['token']);
     }
 
 }
