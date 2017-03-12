@@ -60,6 +60,7 @@ class thekeys extends eqLogic {
         	'_username' => urlencode($user),
         	'_password' => urlencode($pass),
         );
+        $fields_string = '';
         foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
         rtrim($fields_string, '&');
         curl_setopt($curl,CURLOPT_POST, count($fields));
