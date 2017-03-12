@@ -38,14 +38,12 @@ class thekeys extends eqLogic {
         $headers = [
             'Authorization: Bearer ' . config::byKey('token','thekeys')
         ];
-        log::add('thekeys', 'debug', 'Headers : ' . $headers[0]);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl,CURLOPT_RETURNTRANSFER , 1);
-        $retour = curl_exec($curl);
         $json = json_decode(curl_exec($curl), true);
         curl_close ($curl);
 
-        log::add('thekeys', 'debug', 'Retour : ' . $retour);
+        log::add('thekeys', 'debug', 'Retour : ' . $json);
     }
 
     public function authCloud() {
