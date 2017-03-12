@@ -66,7 +66,7 @@ class thekeys extends eqLogic {
         rtrim($fields_string, '&');
         curl_setopt($curl,CURLOPT_POST, count($fields));
         curl_setopt($curl,CURLOPT_POSTFIELDS, $fields_string);
-        $retour = curl_exec($curl)
+        $retour = curl_exec($curl);
         $json = json_decode($retour, true);
         curl_close ($curl);
         $timestamp = time() + (2 * 60 * 60);
