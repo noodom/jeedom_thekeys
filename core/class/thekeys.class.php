@@ -29,15 +29,17 @@ class thekeys extends eqLogic {
     }
 
     public function callCloud($url) {
-        $curl = curl_init();
         if (time() > config::byKey('timestamp','thekeys')) {
             thekeys::authCloud($user,$pass);
         }
-        $header = array('Authorization: Bearer ' . config::byKey('token','thekeys'));
-        $opts = array( 'http' => array ('method'=>'GET',
-        'header'=>$header));
-        $ctx = stream_context_create($opts);
-        $retour = file_get_contents($url,false,$ctx);
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL,$url);
+        $headers = [
+            'Authorization: Bearer ' . config::byKey('token','thekeys')
+        ];
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        $retour = json_decode(curl_exec($curl), true);
+        curl_close ($curl);
 
         log::add('thekeys', 'debug', 'Retour : ' . $retour);
     }
