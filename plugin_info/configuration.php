@@ -43,7 +43,7 @@ if (!isConnect()) {
             <div class="form-group">
               <label class="col-lg-4 control-label">{{Password : }}</label>
               <div class="col-lg-4">
-                <input class="configKey form-control" data-l1key="password" style="margin-top:5px" placeholder="Password"/>
+                <input class="configKey form-control" data-l1key="password" style="margin-top:5px" placeholder="Password" type="password"/>
               </div>
             </div>
 

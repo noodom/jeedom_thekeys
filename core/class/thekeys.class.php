@@ -22,7 +22,7 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class thekeys extends eqLogic {
 
     public function pageConf() {
-        authCloud(config::byKey('username','thekeys'),config::byKey('password','thekeys'));
+        thekeys::authCloud(config::byKey('username','thekeys'),config::byKey('password','thekeys'));
     }
 
     public function callGateway($url,$user,$pass) {
