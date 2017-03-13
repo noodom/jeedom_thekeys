@@ -42,7 +42,12 @@ class thekeys extends eqLogic {
                 $thekeys->save();
             }
             $thekeys->loadCmdFromConf();
+            $url = 'partage/all/clef/' . $key['id']);
+            $json = thekeys::callCloud($url);
+            $url = 'clef/get/' . $key['id']);
+            $json = thekeys::callCloud($url);
         }
+
     }
 
     public function loadCmdFromConf($_update = false) {
@@ -86,7 +91,7 @@ class thekeys extends eqLogic {
         curl_setopt($curl,CURLOPT_RETURNTRANSFER , 1);
         $json = json_decode(curl_exec($curl), true);
         curl_close ($curl);
-        //log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
+        log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
         return $json;
     }
 
@@ -116,7 +121,7 @@ class thekeys extends eqLogic {
         $timestamp = time() + (2 * 60 * 60);
         config::save('token', $json['token'],  'thekeys');
         config::save('timestamp', $timestamp,  'thekeys');
-        log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
+        //log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
         return;
     }
 
