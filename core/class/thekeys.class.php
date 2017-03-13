@@ -40,10 +40,11 @@ class thekeys extends eqLogic {
         ];
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl,CURLOPT_RETURNTRANSFER , 1);
-        $json = json_decode(curl_exec($curl), true);
+        //$json = json_decode(curl_exec($curl), true);
+        $json = curl_exec($curl);
         curl_close ($curl);
-
-        log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
+        log::add('thekeys', 'debug', 'Retour : ' . $json);
+        //log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
     }
 
     public function authCloud() {
