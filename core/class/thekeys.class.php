@@ -23,9 +23,53 @@ class thekeys extends eqLogic {
 
     public function pageConf() {
         thekeys::authCloud();
-        //$url = 'https://api.the-keys.fr/fr/api/v1/welcome';
         $url = 'utilisateur/get/' . urlencode(config::byKey('username','thekeys'));
-        thekeys::callCloud($url);
+        $json = thekeys::callCloud($url);
+        foreach ($json['data']['clefs'] as $key) {
+            $thekeys = self::byLogicalId($key['id'], 'thekeys');
+            if (!is_object($thekeys)) {
+                $thekeys = new thekeys();
+                $thekeys->setEqType_name('thekeys');
+                $thekeys->setLogicalId($key['id']);
+                $thekeys->setIsEnable(1);
+                $thekeys->setIsVisible(1);
+                $thekeys->setName($key['nom'] . ' ' . $key['id']);
+                $thekeys->setConfiguration('id', $key['id']);
+                $thekeys->setConfiguration('id_serrure', $key['id_serrure']);
+                $thekeys->setConfiguration('code', $key['code']);
+                $thekeys->setConfiguration('code_serrure', $key['code_serrure']);
+                $thekeys->setConfiguration('nom', $key['nom']);
+                $thekeys->save();
+            }
+            $thekeys->loadCmdFromConf();
+        }
+    }
+
+    public function loadCmdFromConf($_update = false) {
+        if (!is_file(dirname(__FILE__) . '/../config/devices/key.json')) {
+            return;
+        }
+        $content = file_get_contents(dirname(__FILE__) . '/../config/devices/key.json');
+        if (!is_json($content)) {
+            return;
+        }
+        $device = json_decode($content, true);
+        if (!is_array($device) || !isset($device['commands'])) {
+            return true;
+        }
+        if (isset($device['name']) && !$_update) {
+            $this->setName('[' . $this->getLogicalId() . ']' . $device['name']);
+        }
+        $this->import($device);
+    }
+
+    public function cronHourly() {
+        //thekeys::authCloud();
+        $url = 'utilisateur/get/' . urlencode(config::byKey('username','thekeys'));
+        $json = thekeys::callCloud($url);
+        foreach ($json['data']['clefs'] as $key) {
+            # code...
+        }
     }
 
     public function callCloud($url) {
@@ -40,11 +84,10 @@ class thekeys extends eqLogic {
         ];
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl,CURLOPT_RETURNTRANSFER , 1);
-        //$json = json_decode(curl_exec($curl), true);
-        $json = curl_exec($curl);
+        $json = json_decode(curl_exec($curl), true);
         curl_close ($curl);
-        log::add('thekeys', 'debug', 'Retour : ' . $json);
         //log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
+        return $json;
     }
 
     public function authCloud() {

@@ -1,0 +1,46 @@
+{
+    "name": "Clef",
+	"configuration" : {
+		"model" : "clef",
+        "type" : "clef"
+	},
+    "commands": [
+        {
+            "name": "Statut",
+            "type": "info",
+            "subtype": "binary",
+            "display": {
+				"generic_type": "LOCK_STATE"
+            },
+            "template": {
+                "dashboard": "lock",
+                "mobile": "lock"
+            },
+            "isVisible": 1,
+            "logicalId": "status"
+        },
+
+        {
+            "name": "Ouvrir",
+            "type": "action",
+            "subtype": "other",
+            "display": {
+				"icon": "<i class=\"fa fa-unlock\"><\/i>",
+                "generic_type": "LOCK_OPEN"
+            },
+            "value": "Statut",
+            "logicalId": "open"
+        },
+        {
+            "name": "Fermer",
+            "type": "action",
+            "subtype": "other",
+            "display": {
+				"icon": "<i class=\"fa fa-lock\"><\/i>",
+                "generic_type": "LOCK_CLOSE"
+            },
+            "value": "Statut",
+            "logicalId": "close"
+        }
+    ]
+}

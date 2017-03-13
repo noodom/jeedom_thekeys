@@ -101,33 +101,39 @@ $eqLogics = eqLogic::byType('thekeys');
               </div>
             </div>
 
-
             <div class="form-group">
-              <label class="col-sm-3 control-label">{{Commentaire}}</label>
-              <div class="col-sm-3">
-                <textarea class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="commentaire" ></textarea>
-              </div>
+                <label class="col-sm-3 control-label">{{ID Clef}}</label>
+                <div class="col-sm-3">
+                    <span class="eqLogicAttr" data-l1key="configuration" data-l2key="id"></span>
+                </div>
             </div>
 
             <div class="form-group">
-              <label class="col-sm-3 control-label">{{Adresse IP de la gateway}}</label>
-              <div class="col-sm-3">
-                <input type="text" class="eqLogicAttr configuration form-control" data-l1key="configuration" data-l2key="addr" placeholder="adresse IP de la carte relais"/>
-              </div>
+                <label class="col-sm-3 control-label">{{ID Serrure}}</label>
+                <div class="col-sm-3">
+                    <span class="eqLogicAttr" data-l1key="configuration" data-l2key="id_serrure"></span>
+                </div>
             </div>
 
             <div class="form-group">
-              <label class="col-sm-3 control-label">{{Utilisateur de la gateway}}</label>
-              <div class="col-sm-3">
-                <input type="text" class="eqLogicAttr configuration form-control" data-l1key="configuration" data-l2key="user" placeholder="compte"/>
-              </div>
+                <label class="col-sm-3 control-label">{{Code}}</label>
+                <div class="col-sm-3">
+                    <span class="eqLogicAttr" data-l1key="configuration" data-l2key="code"></span>
+                </div>
             </div>
 
             <div class="form-group">
-              <label class="col-sm-3 control-label">{{Mot de passe de la gateway}}</label>
-              <div class="col-sm-3">
-                <input type="password" class="eqLogicAttr configuration form-control" data-l1key="configuration" data-l2key="pass" placeholder="mot de passe"/>
-              </div>
+                <label class="col-sm-3 control-label">{{Code Serrure}}</label>
+                <div class="col-sm-3">
+                    <span class="eqLogicAttr" data-l1key="configuration" data-l2key="code_serrure"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">{{Nom Clef}}</label>
+                <div class="col-sm-3">
+                    <span class="eqLogicAttr" data-l1key="configuration" data-l2key="nom"></span>
+                </div>
             </div>
 
           </fieldset>
