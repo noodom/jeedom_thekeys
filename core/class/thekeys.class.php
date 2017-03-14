@@ -42,9 +42,9 @@ class thekeys extends eqLogic {
                 $thekeys->save();
             }
             $thekeys->loadCmdFromConf();
-            $url = 'partage/all/clef/' . $key['id']);
+            $url = 'partage/all/clef/' . $key['id'];
             $json = thekeys::callCloud($url);
-            $url = 'clef/get/' . $key['id']);
+            $url = 'clef/get/' . $key['id'];
             $json = thekeys::callCloud($url);
         }
 
