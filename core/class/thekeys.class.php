@@ -42,10 +42,11 @@ class thekeys extends eqLogic {
                 $thekeys->save();
             }
             $thekeys->loadCmdFromConf();
+            $value = ($key['etat'] == 'open') ? 0:1;
+            $thekeys->checkAndUpdateCmd('status',$value);
             $url = 'partage/all/clef/' . $key['id'];
             $json = thekeys::callCloud($url);
-            $url = 'clef/get/' . $key['id'];
-            $json = thekeys::callCloud($url);
+            log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
         }
 
     }
@@ -77,6 +78,15 @@ class thekeys extends eqLogic {
         }
     }
 
+    public function cron() {
+        foreach (eqLogic::byType('thekeys', true) as $thekeys) {
+            $url = 'clef/get/' . $thekeys->getLogicalId();
+            $json = thekeys::callCloud($url);
+            $value = ($json['data']['etat'] == 'open') ? 0:1;
+            $thekeys->checkAndUpdateCmd('status',$value);
+        }
+    }
+
     public function callCloud($url) {
         $url = 'https://api.the-keys.fr/fr/api/v1/' . $url . '?_format=json';
         if (time() > config::byKey('timestamp','thekeys')) {
@@ -91,7 +101,7 @@ class thekeys extends eqLogic {
         curl_setopt($curl,CURLOPT_RETURNTRANSFER , 1);
         $json = json_decode(curl_exec($curl), true);
         curl_close ($curl);
-        log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
+        //log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
         return $json;
     }
 
@@ -134,30 +144,12 @@ class thekeysCmd extends cmd {
             return $this->getConfiguration('value');
             break;
             case 'action' :
-            $request = $this->getConfiguration('request');
-            switch ($this->getSubType()) {
-                case 'slider':
-                $request = str_replace('#slider#', $value, $request);
-                break;
-                case 'color':
-                $request = str_replace('#color#', $_options['color'], $request);
-                break;
-                case 'message':
-                if ($_options != null)  {
-                    $replace = array('#title#', '#message#');
-                    $replaceBy = array($_options['title'], $_options['message']);
-                    if ( $_options['title'] == '') {
-                        throw new Exception(__('Le sujet ne peuvent être vide', __FILE__));
-                    }
-                    $request = str_replace($replace, $replaceBy, $request);
-
-                }
-                else
-                $request = 1;
-                break;
-                default : $request == null ?  1 : $request;
+            $eqLogic = $this->getEqLogic();
+            $url = 'http://' . $eqLogic->getConfiguration('gateway') . '/' . $this->getEqLogic() . '?identifier=' . $eqLogic->getConfiguration('id_serrure') . '&pwd=' . $eqLogic->getConfiguration('code');
+            if ($eqLogic->getConfiguration('gateway') != '') {
+                file_get_contents($url);
             }
-
+            log::add('thekeys', 'debug', 'Call : ' . $url);
             return true;
         }
         return true;
