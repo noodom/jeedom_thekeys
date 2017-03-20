@@ -3,6 +3,6 @@
 	"name" : "The Keys",
 	"licence" : "AGPL",
 	"author" : "lunarok",
-	"require" : "2.4",
+	"require" : "3.0",
 	"category" : "security"
 }
