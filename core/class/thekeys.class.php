@@ -90,7 +90,7 @@ class thekeys extends eqLogic {
     public function callCloud($url) {
         $url = 'https://api.the-keys.fr/fr/api/v1/' . $url . '?_format=json';
         if (time() > config::byKey('timestamp','thekeys')) {
-            thekeys::authCloud($user,$pass);
+            thekeys::authCloud();
         }
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL,$url);
