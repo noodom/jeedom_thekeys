@@ -82,8 +82,8 @@ class thekeys extends eqLogic {
         foreach (eqLogic::byType('thekeys', true) as $thekeys) {
             $url = 'clef/get/' . $thekeys->getLogicalId();
             $json = thekeys::callCloud($url);
-            $value = ($json['data']['etat'] == 'open') ? 0:1;
-            $thekeys->checkAndUpdateCmd('status',$value);
+            //$value = ($json['data']['etat'] == 'open') ? 0:1;
+            //$thekeys->checkAndUpdateCmd('status',$value);
         }
     }
 
