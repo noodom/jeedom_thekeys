@@ -73,9 +73,9 @@ class thekeys extends eqLogic {
         //thekeys::authCloud();
         $url = 'utilisateur/get/' . urlencode(config::byKey('username','thekeys'));
         $json = thekeys::callCloud($url);
-        foreach ($json['data']['clefs'] as $key) {
+        /*foreach ($json['data']['clefs'] as $key) {
             # code...
-        }
+        }*/
     }
 
     public function cron() {
