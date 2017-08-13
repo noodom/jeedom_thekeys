@@ -101,6 +101,8 @@ class thekeys extends eqLogic {
         curl_setopt($curl,CURLOPT_RETURNTRANSFER , 1);
         $json = json_decode(curl_exec($curl), true);
         curl_close ($curl);
+        log::add('thekeys', 'debug', 'URL : ' . $url);
+        log::add('thekeys', 'debug', 'Authorization: Bearer ' . config::byKey('token','thekeys'));
         log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
         return $json;
     }
