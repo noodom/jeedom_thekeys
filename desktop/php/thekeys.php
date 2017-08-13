@@ -41,6 +41,7 @@ $eqLogics = eqLogic::byType('thekeys');
     </div>
 
     <legend><i class="fa fa-table"></i>  {{Mes Keys}}</legend>
+    <div class="eqLogicThumbnailContainer">
     <?php
     foreach ($eqLogics as $eqLogic) {
       $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
@@ -52,7 +53,7 @@ $eqLogics = eqLogic::byType('thekeys');
       echo '</div>';
     }
     ?>
-
+</div>
   </div>
 
   <div class="col-lg-10 col-md-9 col-sm-8 eqLogic" style="border-left: solid 1px #EEE; padding-left: 25px;display: none;">
