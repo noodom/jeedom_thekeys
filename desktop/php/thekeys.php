@@ -24,8 +24,7 @@ $eqLogics = eqLogic::byType('thekeys');
   </div>
 
   <div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px;">
-    <legend><i class="fa fa-table"></i>  {{Mes Keys}}
-    </legend>
+    <legend><i class="fa fa-cog"></i>  {{Gestion}}</legend>
     <div class="eqLogicThumbnailContainer">
       <div class="cursor eqLogicAction" data-action="add" style="background-color : #ffffff; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >
         <center>
@@ -33,31 +32,40 @@ $eqLogics = eqLogic::byType('thekeys');
         </center>
         <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>Ajouter</center></span>
       </div>
-      <?php
-      foreach ($eqLogics as $eqLogic) {
-        $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
-        echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;' . $opacity . '" >';
-        echo "<center>";
-        echo '<img src="plugins/thekeys/doc/images/thekeys_icon.png" height="105" width="95" />';
-        echo "</center>";
-        echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span>';
-        echo '</div>';
-      }
-      ?>
+      <div class="cursor eqLogicAction" data-action="gotoPluginConf" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
+        <center>
+          <i class="fa fa-wrench" style="font-size : 6em;color:#767676;"></i>
+        </center>
+        <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>{{Configuration}}</center></span>
+      </div>
     </div>
+
+    <legend><i class="fa fa-table"></i>  {{Mes Keys}}</legend>
+    <?php
+    foreach ($eqLogics as $eqLogic) {
+      $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
+      echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;' . $opacity . '" >';
+      echo "<center>";
+      echo '<img src="plugins/thekeys/doc/images/thekeys_icon.png" height="105" width="95" />';
+      echo "</center>";
+      echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span>';
+      echo '</div>';
+    }
+    ?>
+
   </div>
 
-<div class="col-lg-10 col-md-9 col-sm-8 eqLogic" style="border-left: solid 1px #EEE; padding-left: 25px;display: none;">
- <a class="btn btn-success eqLogicAction pull-right" data-action="save"><i class="fa fa-check-circle"></i> {{Sauvegarder}}</a>
- <a class="btn btn-danger eqLogicAction pull-right" data-action="remove"><i class="fa fa-minus-circle"></i> {{Supprimer}}</a>
- <a class="btn btn-default eqLogicAction pull-right" data-action="configure"><i class="fa fa-cogs"></i> {{Configuration avancée}}</a>
- <ul class="nav nav-tabs" role="tablist">
-  <li role="presentation"><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay"><i class="fa fa-arrow-circle-left"></i></a></li>
-  <li role="presentation" class="active"><a href="#eqlogictab" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-tachometer"></i> {{Equipement}}</a></li>
-  <li role="presentation"><a href="#commandtab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Commandes}}</a></li>
-</ul>
-<div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
-  <div role="tabpanel" class="tab-pane active" id="eqlogictab">
+  <div class="col-lg-10 col-md-9 col-sm-8 eqLogic" style="border-left: solid 1px #EEE; padding-left: 25px;display: none;">
+    <a class="btn btn-success eqLogicAction pull-right" data-action="save"><i class="fa fa-check-circle"></i> {{Sauvegarder}}</a>
+    <a class="btn btn-danger eqLogicAction pull-right" data-action="remove"><i class="fa fa-minus-circle"></i> {{Supprimer}}</a>
+    <a class="btn btn-default eqLogicAction pull-right" data-action="configure"><i class="fa fa-cogs"></i> {{Configuration avancée}}</a>
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation"><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay"><i class="fa fa-arrow-circle-left"></i></a></li>
+      <li role="presentation" class="active"><a href="#eqlogictab" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-tachometer"></i> {{Equipement}}</a></li>
+      <li role="presentation"><a href="#commandtab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Commandes}}</a></li>
+    </ul>
+    <div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
+      <div role="tabpanel" class="tab-pane active" id="eqlogictab">
         <form class="form-horizontal">
           <fieldset>
             <div class="form-group">
@@ -102,38 +110,38 @@ $eqLogics = eqLogic::byType('thekeys');
             </div>
 
             <div class="form-group">
-                <label class="col-sm-3 control-label">{{ID Clef}}</label>
-                <div class="col-sm-3">
-                    <span class="eqLogicAttr" data-l1key="configuration" data-l2key="id"></span>
-                </div>
+              <label class="col-sm-3 control-label">{{ID Clef}}</label>
+              <div class="col-sm-3">
+                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="id"></span>
+              </div>
             </div>
 
             <div class="form-group">
-                <label class="col-sm-3 control-label">{{ID Serrure}}</label>
-                <div class="col-sm-3">
-                    <span class="eqLogicAttr" data-l1key="configuration" data-l2key="id_serrure"></span>
-                </div>
+              <label class="col-sm-3 control-label">{{ID Serrure}}</label>
+              <div class="col-sm-3">
+                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="id_serrure"></span>
+              </div>
             </div>
 
             <div class="form-group">
-                <label class="col-sm-3 control-label">{{Code}}</label>
-                <div class="col-sm-3">
-                    <span class="eqLogicAttr" data-l1key="configuration" data-l2key="code"></span>
-                </div>
+              <label class="col-sm-3 control-label">{{Code}}</label>
+              <div class="col-sm-3">
+                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="code"></span>
+              </div>
             </div>
 
             <div class="form-group">
-                <label class="col-sm-3 control-label">{{Code Serrure}}</label>
-                <div class="col-sm-3">
-                    <span class="eqLogicAttr" data-l1key="configuration" data-l2key="code_serrure"></span>
-                </div>
+              <label class="col-sm-3 control-label">{{Code Serrure}}</label>
+              <div class="col-sm-3">
+                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="code_serrure"></span>
+              </div>
             </div>
 
             <div class="form-group">
-                <label class="col-sm-3 control-label">{{Nom Clef}}</label>
-                <div class="col-sm-3">
-                    <span class="eqLogicAttr" data-l1key="configuration" data-l2key="nom"></span>
-                </div>
+              <label class="col-sm-3 control-label">{{Nom Clef}}</label>
+              <div class="col-sm-3">
+                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="nom"></span>
+              </div>
             </div>
 
           </fieldset>
