@@ -50,6 +50,7 @@ class thekeys extends eqLogic {
             $value = ($key['etat'] == 'open') ? 0:1;
             $thekeys->checkAndUpdateCmd('status',$value);
             $thekeys->checkAndUpdateCmd('battery',$key['battery']/1000);
+            $thekeys->batteryStatus($key['battery']/40);
             $url = 'partage/all/clef/' . $key['id'];
             $json = thekeys::callCloud($url);
         }
