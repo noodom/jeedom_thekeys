@@ -21,11 +21,11 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 
 class thekeys extends eqLogic {
 
-    public function pageConf() {
+    public function updateUser() {
         thekeys::authCloud();
         $url = 'utilisateur/get/' . urlencode(config::byKey('username','thekeys'));
         $json = thekeys::callCloud($url);
-        foreach ($json['data']['clefs'] as $key) {
+        foreach ($json['data']['serrures'] as $key) {
             $thekeys = self::byLogicalId($key['id'], 'thekeys');
             if (!is_object($thekeys)) {
                 $thekeys = new thekeys();
@@ -38,17 +38,21 @@ class thekeys extends eqLogic {
                 $thekeys->setConfiguration('id_serrure', $key['id_serrure']);
                 $thekeys->setConfiguration('code', $key['code']);
                 $thekeys->setConfiguration('code_serrure', $key['code_serrure']);
+                $thekeys->setConfiguration('serrure_droite', $key['serrure_droite']);
+                //$thekeys->setConfiguration('etat', $key['etat']);
+                $thekeys->setConfiguration('couleur', $key['couleur']);
+                $thekeys->setConfiguration('public_key', $key['public_key']);
                 $thekeys->setConfiguration('nom', $key['nom']);
+                //$thekeys->setConfiguration('battery', $key['battery']);
                 $thekeys->save();
             }
             $thekeys->loadCmdFromConf();
             $value = ($key['etat'] == 'open') ? 0:1;
             $thekeys->checkAndUpdateCmd('status',$value);
+            $thekeys->checkAndUpdateCmd('battery',$key['battery']/1000);
             $url = 'partage/all/clef/' . $key['id'];
             $json = thekeys::callCloud($url);
-            log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
         }
-
     }
 
     public function loadCmdFromConf($_update = false) {
@@ -69,22 +73,12 @@ class thekeys extends eqLogic {
         $this->import($device);
     }
 
-    public function cronHourly() {
-        //thekeys::authCloud();
-        $url = 'utilisateur/get/' . urlencode(config::byKey('username','thekeys'));
-        $json = thekeys::callCloud($url);
-        /*foreach ($json['data']['clefs'] as $key) {
-            # code...
-        }*/
+    public function cron5() {
+        thekeys::updateUser();
     }
 
-    public function cron() {
-        foreach (eqLogic::byType('thekeys', true) as $thekeys) {
-            $url = 'clef/get/' . $thekeys->getLogicalId();
-            $json = thekeys::callCloud($url);
-            //$value = ($json['data']['etat'] == 'open') ? 0:1;
-            //$thekeys->checkAndUpdateCmd('status',$value);
-        }
+    public function pageConf() {
+        thekeys::updateUser();
     }
 
     public function callCloud($url) {

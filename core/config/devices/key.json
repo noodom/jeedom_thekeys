@@ -19,7 +19,16 @@
             "isVisible": 1,
             "logicalId": "status"
         },
-
+        {
+            "name": "Batterie",
+            "type": "info",
+            "subtype": "numeric",
+            "display": {
+				"generic_type": "DONT"
+            },
+            "isVisible": 0,
+            "logicalId": "battery"
+        },
         {
             "name": "Ouvrir",
             "type": "action",
