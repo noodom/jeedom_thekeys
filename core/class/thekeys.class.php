@@ -88,7 +88,7 @@ class thekeys extends eqLogic {
     }
 
     public function callCloud($url) {
-        $url = 'https://api.the-keys.fr/fr/api/v1/' . $url . '?_format=json';
+        $url = 'https://api.the-keys.fr/fr/api/v2/' . $url . '?_format=json';
         if (time() > config::byKey('timestamp','thekeys')) {
             thekeys::authCloud();
         }
@@ -101,7 +101,7 @@ class thekeys extends eqLogic {
         curl_setopt($curl,CURLOPT_RETURNTRANSFER , 1);
         $json = json_decode(curl_exec($curl), true);
         curl_close ($curl);
-        //log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
+        log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
         return $json;
     }
 
@@ -145,7 +145,8 @@ class thekeysCmd extends cmd {
             break;
             case 'action' :
             $eqLogic = $this->getEqLogic();
-            $url = 'http://' . $eqLogic->getConfiguration('gateway') . '/' . $this->getEqLogic() . '?identifier=' . $eqLogic->getConfiguration('id_serrure') . '&pwd=' . $eqLogic->getConfiguration('code');
+            $timestamp = time() + (2 * 60 * 60);
+            $url = 'http://' . $eqLogic->getConfiguration('gateway') . '/' . $this->getEqLogic() . '?identifier=' . $eqLogic->getConfiguration('id_serrure') . '&ts=' . $timestamp;
             if ($eqLogic->getConfiguration('gateway') != '') {
                 file_get_contents($url);
             }
