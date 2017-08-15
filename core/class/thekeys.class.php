@@ -34,6 +34,7 @@ class thekeys extends eqLogic {
                 $thekeys->setIsEnable(1);
                 $thekeys->setIsVisible(1);
                 $thekeys->setName($key['nom'] . ' ' . $key['id']);
+                $thekeys->setConfiguration('type', 'locker');
                 $thekeys->setConfiguration('id', $key['id']);
                 $thekeys->setConfiguration('id_serrure', $key['id_serrure']);
                 $thekeys->setConfiguration('code', $key['code']);
@@ -46,7 +47,7 @@ class thekeys extends eqLogic {
                 //$thekeys->setConfiguration('battery', $key['battery']);
                 $thekeys->save();
             }
-            $thekeys->loadCmdFromConf();
+            $thekeys->loadCmdFromConf($thekeys->getConfiguration('type'));
             $value = ($key['etat'] == 'open') ? 1:0;
             $thekeys->checkAndUpdateCmd('status',$value);
             $thekeys->checkAndUpdateCmd('battery',$key['battery']/1000);
@@ -56,13 +57,20 @@ class thekeys extends eqLogic {
         }
     }
 
-    public function loadCmdFromConf($_update = false) {
-        if (!is_file(dirname(__FILE__) . '/../config/devices/key.json')) {
-            return;
+    public function postAjax() {
+      if ($this->getConfiguration('typeSelect') != $this->getConfiguration('type')) {
+        $this->setConfiguration('type'),$this->getConfiguration('typeSelect'));
+      }
+      $this->loadCmdFromConf($this->getConfiguration('type'));
+    }
+
+    public function loadCmdFromConf($type) {
+        if (!is_file(dirname(__FILE__) . '/../config/devices/' . $type . '.json')) {
+          return;
         }
-        $content = file_get_contents(dirname(__FILE__) . '/../config/devices/key.json');
+        $content = file_get_contents(dirname(__FILE__) . '/../config/devices/' . $type . '.json');
         if (!is_json($content)) {
-            return;
+          return;
         }
         $device = json_decode($content, true);
         if (!is_array($device) || !isset($device['commands'])) {
@@ -137,9 +145,6 @@ class thekeys extends eqLogic {
 class thekeysCmd extends cmd {
     public function execute($_options = null) {
         switch ($this->getType()) {
-            case 'info' :
-            return $this->getConfiguration('value');
-            break;
             case 'action' :
             $eqLogic = $this->getEqLogic();
             $timestamp = time() + (2 * 60 * 60);

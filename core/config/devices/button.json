@@ -1,0 +1,49 @@
+{
+    "name": "button",
+    "commands": [
+        {
+            "name": "Partage",
+            "type": "info",
+            "subtype": "binary",
+            "display": {
+				"generic_type": "DONT"
+            },
+            "configuration": {
+				"type": "button"
+            },
+            "isVisible": 1,
+            "logicalId": "button:status"
+        },
+        {
+            "name": "Désactiver tous partages",
+            "type": "action",
+            "subtype": "other",
+            "display": {
+				"generic_type": "DONT"
+            },
+            "configuration": {
+				"type": "button"
+            },
+            "logicalId": "button:shareRemove"
+        },
+        {
+            "name": "Activer le partage permanent",
+            "type": "action",
+            "subtype": "other",
+            "configuration": {
+				"type": "button"
+            },
+            "logicalId": "button:sharePermanent"
+        },
+        {
+            "name": "Fermer",
+            "type": "action",
+            "subtype": "message",
+            "configuration": {
+				"type": "button"
+            },
+            "isVisible": 1,
+            "logicalId": "button:shareOptions"
+        }
+    ]
+}

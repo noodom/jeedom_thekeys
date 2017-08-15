@@ -14,6 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
+ $('#type').change(function(){
+   var text = $("#type").val();
+   if (text == 'locker') {
+     $('#locker').show();
+     $('#typeSelect').hide();
+   }
+   if (text == 'address') {
+     $('#locker').hide();
+     $('#typeSelect').show();
+   }
+ });
+
+ $('#typeList').change(function(){
+   var text = $("#typeList").val();
+   if (text == 'gateway') {
+     $('#gateway').show();
+   }
+   if (text == 'address') {
+     $('#gateway').hide();
+   }
+ });
 
 function addCmdToTable(_cmd) {
     if (!isset(_cmd)) {

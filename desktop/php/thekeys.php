@@ -110,6 +110,14 @@ $eqLogics = eqLogic::byType('thekeys');
               </div>
             </div>
 
+            <div class="form-group" style="display:none">
+              <label class="col-sm-3 control-label">{{Type}}</label>
+              <div class="col-sm-3">
+                <span id="type" class="eqLogicAttr" data-l1key="configuration" data-l2key="type"></span>
+              </div>
+            </div>
+
+            <div id="locker" style="display:none">
             <div class="form-group">
               <label class="col-sm-3 control-label">{{ID Clef}}</label>
               <div class="col-sm-3">
@@ -142,6 +150,31 @@ $eqLogics = eqLogic::byType('thekeys');
               <label class="col-sm-3 control-label">{{Nom Clef}}</label>
               <div class="col-sm-3">
                 <span class="eqLogicAttr" data-l1key="configuration" data-l2key="nom"></span>
+              </div>
+            </div>
+          </div>
+
+            <div id="typeSelect" style="display:none">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">{{Type d'équipement}}</label>
+                <div class="col-sm-3">
+                  <select id="typeList" class="form-control eqLogicAttr configuration" data-l1key="configuration" data-l2key="typeSelect">
+                    <option value="gateway">Gateway réseau</option>
+                    <option value="button">Bouton clef</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">{{ID de l'équipement}}</label>
+                <div class="col-sm-3">
+                  <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="id" type="text" placeholder="{{voir la doc}}">
+                </div>
+              </div>
+              <div class="form-group" id="gateway" style="display:none">
+                <label class="col-sm-2 control-label">{{IP de la passerelle}}</label>
+                <div class="col-sm-3">
+                  <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="ip" type="text" placeholder="{{voir la doc}}">
+                </div>
               </div>
             </div>
 

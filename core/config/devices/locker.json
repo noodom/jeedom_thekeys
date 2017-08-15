@@ -1,9 +1,5 @@
 {
-    "name": "Clef",
-	"configuration" : {
-		"model" : "clef",
-        "type" : "clef"
-	},
+    "name": "locker",
     "commands": [
         {
             "name": "Statut",
@@ -16,8 +12,11 @@
                 "dashboard": "lock",
                 "mobile": "lock"
             },
+            "configuration": {
+				"type": "locker"
+            },
             "isVisible": 1,
-            "logicalId": "status"
+            "logicalId": "locker:status"
         },
         {
             "name": "Batterie",
@@ -26,8 +25,11 @@
             "display": {
 				"generic_type": "DONT"
             },
+            "configuration": {
+				"type": "locker"
+            },
             "isVisible": 0,
-            "logicalId": "battery"
+            "logicalId": "locker:battery"
         },
         {
             "name": "Ouvrir",
@@ -37,8 +39,11 @@
 				"icon": "<i class=\"fa fa-unlock\"><\/i>",
                 "generic_type": "LOCK_OPEN"
             },
+            "configuration": {
+				"type": "locker"
+            },
             "value": "Statut",
-            "logicalId": "open"
+            "logicalId": "locker:open"
         },
         {
             "name": "Fermer",
@@ -48,8 +53,11 @@
 				"icon": "<i class=\"fa fa-lock\"><\/i>",
                 "generic_type": "LOCK_CLOSE"
             },
+            "configuration": {
+				"type": "locker"
+            },
             "value": "Statut",
-            "logicalId": "close"
+            "logicalId": "locker:close"
         }
     ]
 }
