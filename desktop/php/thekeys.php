@@ -113,7 +113,7 @@ $eqLogics = eqLogic::byType('thekeys');
             <div class="form-group" style="display:none">
               <label class="col-sm-3 control-label">{{Type}}</label>
               <div class="col-sm-3">
-                <span id="type" class="eqLogicAttr" data-l1key="configuration" data-l2key="type"></span>
+                <span class="eqLogicAttr" data-l1key="configuration" data-l2key="type"></span>
               </div>
             </div>
 
@@ -154,7 +154,7 @@ $eqLogics = eqLogic::byType('thekeys');
             </div>
           </div>
 
-            <div id="typeSelect" style="display:none">
+            <div id="others" style="display:none">
               <div class="form-group">
                 <label class="col-sm-2 control-label">{{Type d'équipement}}</label>
                 <div class="col-sm-3">
