@@ -57,12 +57,26 @@ class thekeys extends eqLogic {
         }
     }
 
+    public function allowLockers() {
+      thekeys::authCloud();
+      $idgateway = $this->getConfiguration('idfield');
+      foreach (eqLogic::byType('thekeys', true) as $location) {
+        if ($location->getConfiguration('type') == 'locker') {
+          $url = 'partage/create/' . $location->getConfiguration('id') . '/accessoire/' . $id;
+          $json = thekeys::callCloud($url);
+        }
+      }
+    }
+
     public function postAjax() {
       if ($this->getConfiguration('typeSelect') != $this->getConfiguration('type')) {
         $this->setConfiguration('type',$this->getConfiguration('typeSelect'));
         $this->save();
       }
       $this->loadCmdFromConf($this->getConfiguration('type'));
+      if ($this->getConfiguration('type') == 'gateway') {
+        $this->allowLockers();
+      }
     }
 
     public function loadCmdFromConf($type) {

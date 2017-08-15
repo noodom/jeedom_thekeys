@@ -167,13 +167,13 @@ $eqLogics = eqLogic::byType('thekeys');
               <div class="form-group">
                 <label class="col-sm-3 control-label">{{ID de l'équipement}}</label>
                 <div class="col-sm-3">
-                  <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="id" type="text" placeholder="{{voir la doc}}">
+                  <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="idfield" type="text" placeholder="{{voir la doc}}">
                 </div>
               </div>
               <div class="form-group" id="gateway" style="display:none">
                 <label class="col-sm-3 control-label">{{IP de la passerelle}}</label>
                 <div class="col-sm-3">
-                  <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="ip" type="text" placeholder="{{voir la doc}}">
+                  <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="ipfield" type="text" placeholder="{{voir la doc}}">
                 </div>
               </div>
             </div>
