@@ -63,7 +63,7 @@ class thekeys extends eqLogic {
       foreach (eqLogic::byType('thekeys', true) as $location) {
         if ($location->getConfiguration('type') == 'locker') {
           $url = 'https://api.the-keys.fr/fr/api/v2/partage/create/' . $location->getConfiguration('id') . '/accessoire/' . $idgateway;
-          $data = array('partage_accessoire[description]' => '', 'partage_accessoire[nom]' = > $this->getName());
+          $data = array('partage_accessoire[description]' => '', 'partage_accessoire[nom]' => $this->getName());
           $request_http = new com_http($url);
           $request_http->setHeader(array('Authorization: Bearer ' . config::byKey('token','thekeys')));
           $request_http->setPost($data);
@@ -125,7 +125,7 @@ class thekeys extends eqLogic {
             'Authorization: Bearer ' . config::byKey('token','thekeys')
         ];
         if ($param != "json") {
-          $data = array('partage_accessoire[description]' => '', 'partage_accessoire[nom]' = > $param);
+          $data = array('partage_accessoire[description]' => '', 'partage_accessoire[nom]' => $param);
 
         }
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
