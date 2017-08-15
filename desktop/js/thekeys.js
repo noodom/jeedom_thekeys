@@ -18,8 +18,7 @@ $('#typeList').change(function(){
   var text = $("#typeList").val();
   if (text == 'gateway') {
     $('#gateway').show();
-  }
-  if (text == 'address') {
+  } else {
     $('#gateway').hide();
   }
 });
@@ -28,8 +27,7 @@ function printEqLogic(_eqLogic){
   if (_eqLogic.configuration.type == 'locker') {
     $('#locker').show();
     $('#others').hide();
-  }
-  if (text == 'address') {
+  } else {
     $('#locker').hide();
     $('#others').show();
   }
