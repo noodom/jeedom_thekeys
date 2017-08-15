@@ -62,8 +62,14 @@ class thekeys extends eqLogic {
       $idgateway = $this->getConfiguration('idfield');
       foreach (eqLogic::byType('thekeys', true) as $location) {
         if ($location->getConfiguration('type') == 'locker') {
-          $url = 'partage/create/' . $location->getConfiguration('id') . '/accessoire/' . $idgateway;
-          $json = thekeys::callCloud($url);
+          $url = 'https://api.the-keys.fr/fr/api/v2/partage/create/' . $location->getConfiguration('id') . '/accessoire/' . $idgateway;
+          $data = array('partage_accessoire[description]' => '', 'partage_accessoire[nom]' = > $this->getName());
+          $request_http = new com_http($url);
+          $request_http->setHeader(array('Authorization: Bearer ' . config::byKey('token','thekeys')));
+          $request_http->setPost($data);
+          $output = $request_http->exec(30);
+          $result = json_decode($output, true);
+          log::add('thekeys', 'debug', 'Retour : ' . print_r($result, true));
         }
       }
     }
@@ -105,8 +111,11 @@ class thekeys extends eqLogic {
         thekeys::updateUser();
     }
 
-    public function callCloud($url) {
-        $url = 'https://api.the-keys.fr/fr/api/v2/' . $url . '?_format=json';
+    public function callCloud($url,$param = "json") {
+        $url = 'https://api.the-keys.fr/fr/api/v2/' . $url;
+        if ($param == "json") {
+          $url .= '?_format=json';
+        }
         if (time() > config::byKey('timestamp','thekeys')) {
             thekeys::authCloud();
         }
@@ -115,12 +124,16 @@ class thekeys extends eqLogic {
         $headers = [
             'Authorization: Bearer ' . config::byKey('token','thekeys')
         ];
+        if ($param != "json") {
+          $data = array('partage_accessoire[description]' => '', 'partage_accessoire[nom]' = > $param);
+
+        }
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl,CURLOPT_RETURNTRANSFER , 1);
         $json = json_decode(curl_exec($curl), true);
         curl_close ($curl);
         log::add('thekeys', 'debug', 'URL : ' . $url);
-        log::add('thekeys', 'debug', 'Authorization: Bearer ' . config::byKey('token','thekeys'));
+        //log::add('thekeys', 'debug', 'Authorization: Bearer ' . config::byKey('token','thekeys'));
         log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
         return $json;
     }
