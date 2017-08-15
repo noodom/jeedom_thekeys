@@ -14,18 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
- $('#type').change(function(){
-   var text = $("#type").val();
-   if (text == 'locker') {
-     $('#locker').show();
-     $('#typeSelect').hide();
-   }
-   if (text == 'address') {
-     $('#locker').hide();
-     $('#typeSelect').show();
-   }
- });
-
  $('#typeList').change(function(){
    var text = $("#typeList").val();
    if (text == 'gateway') {
@@ -35,6 +23,17 @@
      $('#gateway').hide();
    }
  });
+
+ function printEqLogic(_eqLogic){
+			if (_eqLogic.configuration.type == 'locker') {
+        $('#locker').show();
+        $('#typeSelect').hide();
+      }
+      if (text == 'address') {
+        $('#locker').hide();
+        $('#typeSelect').show();
+      }
+}
 
 function addCmdToTable(_cmd) {
     if (!isset(_cmd)) {
