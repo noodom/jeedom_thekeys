@@ -59,7 +59,8 @@ class thekeys extends eqLogic {
 
     public function postAjax() {
       if ($this->getConfiguration('typeSelect') != $this->getConfiguration('type')) {
-        $this->setConfiguration('type'),$this->getConfiguration('typeSelect'));
+        $this->setConfiguration('type',$this->getConfiguration('typeSelect'));
+        $this->save();
       }
       $this->loadCmdFromConf($this->getConfiguration('type'));
     }
