@@ -62,7 +62,7 @@ class thekeys extends eqLogic {
       $idgateway = $this->getConfiguration('idfield');
       foreach (eqLogic::byType('thekeys', true) as $location) {
         if ($location->getConfiguration('type') == 'locker') {
-          $url = 'partage/create/' . $location->getConfiguration('id') . '/accessoire/' . $id;
+          $url = 'partage/create/' . $location->getConfiguration('id') . '/accessoire/' . $idgateway;
           $json = thekeys::callCloud($url);
         }
       }
