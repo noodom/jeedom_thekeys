@@ -117,6 +117,8 @@ class thekeys extends eqLogic {
         }
         $this->loadCmdFromConf($this->getConfiguration('type'));
         if ($this->getConfiguration('type') == 'gateway') {
+            $this->setLogicalId($this->getConfiguration('id'));
+            $this->save();
             $this->allowLockers();
         }
     }
@@ -233,12 +235,9 @@ class thekeysCmd extends cmd {
         switch ($this->getType()) {
             case 'action' :
             $eqLogic = $this->getEqLogic();
-            $timestamp = time() + (2 * 60 * 60);
             $url = 'http://' . $eqLogic->getConfiguration('gateway') . '/' . $this->getEqLogic() . '?identifier=' . $eqLogic->getConfiguration('id_serrure') . '&ts=' . $timestamp;
-            if ($eqLogic->getConfiguration('gateway') != '') {
-                file_get_contents($url);
-            }
-            log::add('thekeys', 'debug', 'Call : ' . $url);
+            $gateway = self::byLogicalId($eqLogic->getConfiguration('gateway'), 'thekeys');
+            $gateway->callGateway($this->getConfiguration('value'),$eqLogic->getConfiguration('id_serrure'),$eqLogic->getConfiguration('code' . $gateway->getConfiguration('id')));
             return true;
         }
         return true;

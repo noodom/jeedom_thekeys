@@ -40,7 +40,8 @@
                 "generic_type": "LOCK_OPEN"
             },
             "configuration": {
-				"type": "locker"
+				"type": "locker",
+                "value": "open"
             },
             "value": "Statut",
             "logicalId": "locker:open"
@@ -54,7 +55,8 @@
                 "generic_type": "LOCK_CLOSE"
             },
             "configuration": {
-				"type": "locker"
+				"type": "locker",
+                "value": "close"
             },
             "value": "Statut",
             "logicalId": "locker:close"
