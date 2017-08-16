@@ -172,10 +172,10 @@ class thekeys extends eqLogic {
     public function callGateway($uri,$id = '', $code = '') {
         $url = 'http://' . $this->getConfiguration('ipfield') . '/' . $uri;
         $request_http = new com_http($url);
-        if ($uri != ' search') {
+        if ($uri != ' lockers') {
             $ts = time();
             $key = hash_hmac('sha512',$ts,$code);
-            $has = base64_encode($key);
+            $hash = base64_encode($key);
             $data = array('hash' => $hash, 'identifier' => $id, 'ts' => $ts);
             $request_http->setPost($data);
         }
@@ -203,7 +203,7 @@ class thekeys extends eqLogic {
         $timestamp = time() + (2 * 60 * 60);
         config::save('token', $json['token'],  'thekeys');
         config::save('timestamp', $timestamp,  'thekeys');
-        //log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
+        log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
         return;
     }
 
