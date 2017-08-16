@@ -63,11 +63,23 @@ class thekeys extends eqLogic {
         $this->scanLockers();
         thekeys::authCloud();
         $idgateway = $this->getConfiguration('idfield');
+        $nbgateway = 0;
         foreach (eqLogic::byType('thekeys', true) as $location) {
             if ($location->getConfiguration('type') == 'locker' && $location->getConfiguration('share' . $idgateway, 0) != 1 && $location->getConfiguration('accessible' . $idgateway, 0) == 1) {
                 $url = 'partage/create/' . $location->getConfiguration('id') . '/accessoire/' . $idgateway;
                 $data = array('partage_accessoire[description]' => '', 'partage_accessoire[nom]' => $this->getName());
                 $json = thekeys::callCloud($url,$data);
+            }
+            if ($location->getConfiguration('type') == 'gateway') {
+                $nbgateway = $nbgateway +1;
+            }
+        }
+        if ($nbgateway == 1) {
+            foreach (eqLogic::byType('thekeys', true) as $location) {
+                if ($location->getConfiguration('type') == 'locker') {
+                    $location->setConfiguration('gateway',$idgateway);
+                    $location->save();
+                }
             }
         }
     }
@@ -232,8 +244,11 @@ class thekeys extends eqLogic {
 
 class thekeysCmd extends cmd {
     public function execute($_options = null) {
-        switch ($this->getType()) {
-            case 'action' :
+        if ($this->getType() == 'info') {
+            return;
+        }
+        switch ($this->getConfiguration('type')) {
+            case 'locker' :
             $eqLogic = $this->getEqLogic();
             $url = 'http://' . $eqLogic->getConfiguration('gateway') . '/' . $this->getEqLogic() . '?identifier=' . $eqLogic->getConfiguration('id_serrure') . '&ts=' . $timestamp;
             $gateway = self::byLogicalId($eqLogic->getConfiguration('gateway'), 'thekeys');
