@@ -129,11 +129,22 @@ class thekeys extends eqLogic {
         }
         $this->loadCmdFromConf($this->getConfiguration('type'));
         if ($this->getConfiguration('type') == 'gateway') {
-            $this->setLogicalId($this->getConfiguration('id'));
+            $this->setLogicalId($this->getConfiguration('idfield'));
             $this->save();
             $this->allowLockers();
         }
     }
+
+    /*public function preSave() {
+        if ($this->getConfiguration('typeSelect') != $this->getConfiguration('type')) {
+            $this->setConfiguration('type',$this->getConfiguration('typeSelect'));
+        }
+        $this->loadCmdFromConf($this->getConfiguration('type'));
+        if ($this->getConfiguration('type') == 'gateway') {
+            $this->setLogicalId($this->getConfiguration('idfield'));
+            $this->allowLockers();
+        }
+    }*/
 
     public function loadCmdFromConf($type) {
         if (!is_file(dirname(__FILE__) . '/../config/devices/' . $type . '.json')) {
