@@ -83,5 +83,5 @@ function addCmdToTable(_cmd) {
 }
 
 $('body').on('thekeys::found', function (_event,_options) {
-    window.location.href = 'index.php?v=d&p=thekeys&m=thekeys&id=' + _options+'&nocache=' + (new Date()).getTime();
+    window.location.href = 'index.php?v=d&p=thekeys&m=thekeys&nocache=' + (new Date()).getTime();
 });
