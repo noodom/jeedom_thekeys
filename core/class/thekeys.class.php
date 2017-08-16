@@ -72,7 +72,7 @@ class thekeys extends eqLogic {
     public function scanLockers() {
         $idgateway = $this->getConfiguration('idfield');
         $json = $this->callGateway('lockers');
-        if (!is_json($json) || $json['status'] != 'ok') {
+        if (!is_array($json) || $json['status'] != 'ok') {
             log::add('thekeys', 'error', 'Passerelle injoignable');
         }
         foreach ($json['devices'] as $device) {
@@ -95,6 +95,9 @@ class thekeys extends eqLogic {
             if ($location->getConfiguration('type') == 'locker') {
                 $url = 'partage/all/serrure/' . $location->getConfiguration('id');
                 $json = thekeys::callCloud($url);
+                if (!is_array($json) || $json['status'] != '200') {
+                    log::add('thekeys', 'error', 'Erreur dans la vérification des partages');
+                }
                 //update 'share' . $idtrouve + infos sur la plage horaire
                 foreach ($json['data']['partages_accessoire'] as $share) {
                     $location->setConfiguration('share' . $share['accessoire']['id_accessoire'],1);
