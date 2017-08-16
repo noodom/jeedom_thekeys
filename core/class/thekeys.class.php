@@ -87,9 +87,9 @@ class thekeys extends eqLogic {
     public function scanLockers() {
         $idgateway = $this->getConfiguration('idfield');
         $json = $this->callGateway('lockers');
-        if (!is_array($json) || $json['status'] != 'ok') {
+        /*if (!is_array($json) || $json['status'] != 'ok') {
             log::add('thekeys', 'error', 'Passerelle injoignable');
-        }
+        }*/
         foreach ($json['devices'] as $device) {
             $thekeys = self::byLogicalId($device['identifier'], 'thekeys');
             if (is_object($thekeys)) {
@@ -250,9 +250,8 @@ class thekeysCmd extends cmd {
         switch ($this->getConfiguration('type')) {
             case 'locker' :
             $eqLogic = $this->getEqLogic();
-            $url = 'http://' . $eqLogic->getConfiguration('gateway') . '/' . $this->getEqLogic() . '?identifier=' . $eqLogic->getConfiguration('id_serrure') . '&ts=' . $timestamp;
             $gateway = self::byLogicalId($eqLogic->getConfiguration('gateway'), 'thekeys');
-            $gateway->callGateway($this->getConfiguration('value'),$eqLogic->getConfiguration('id_serrure'),$eqLogic->getConfiguration('code' . $gateway->getConfiguration('id')));
+            $gateway->callGateway($this->getConfiguration('value'),$eqLogic->getConfiguration('id_serrure'),$eqLogic->getConfiguration('code' . $eqLogic->getConfiguration('gateway')));
             return true;
         }
         return true;
