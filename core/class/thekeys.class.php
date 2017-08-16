@@ -26,14 +26,14 @@ class thekeys extends eqLogic {
         $url = 'utilisateur/get/' . urlencode(config::byKey('username','thekeys'));
         $json = thekeys::callCloud($url);
         foreach ($json['data']['serrures'] as $key) {
-            $thekeys = self::byLogicalId($key['id'], 'thekeys');
+            $thekeys = self::byLogicalId($key['id_serrure'], 'thekeys');
             if (!is_object($thekeys)) {
                 $thekeys = new thekeys();
                 $thekeys->setEqType_name('thekeys');
-                $thekeys->setLogicalId($key['id']);
+                $thekeys->setLogicalId($key['id_serrure']);
                 $thekeys->setIsEnable(1);
                 $thekeys->setIsVisible(1);
-                $thekeys->setName($key['nom'] . ' ' . $key['id']);
+                $thekeys->setName($key['nom'] . ' ' . $key['id_serrure']);
                 $thekeys->setConfiguration('type', 'locker');
                 $thekeys->setConfiguration('id', $key['id']);
                 $thekeys->setConfiguration('id_serrure', $key['id_serrure']);
@@ -79,10 +79,10 @@ class thekeys extends eqLogic {
             $thekeys = self::byLogicalId($device['identifier'], 'thekeys');
             if (is_object($thekeys)) {
                 $thekeys->setConfiguration('rssi',$device['rssi']);
-                $thekeys->setConfiguration('visible' . $location->getConfiguration('id'),1);
+                $thekeys->setConfiguration('visible' . $this->getConfiguration('id'),1);
                 $thekeys->save();
-                $value = ($key['etat'] == 'open') ? 0:1;
-                $thekeys->checkAndUpdateCmd('status',$value);
+                //$value = ($key['etat'] == 'open') ? 0:1;
+                //$thekeys->checkAndUpdateCmd('status',$value);
                 $thekeys->checkAndUpdateCmd('battery',$key['battery']/1000);
                 $thekeys->batteryStatus($key['battery']/40);;
             }
