@@ -132,6 +132,9 @@ class thekeys extends eqLogic {
             $this->setLogicalId($this->getConfiguration('idfield'));
             $this->save();
             $this->allowLockers();
+            event::add('thekeys::found', array(
+                'message' => __('Nouvelle gateway' , __FILE__),
+            ));
         }
     }
 
