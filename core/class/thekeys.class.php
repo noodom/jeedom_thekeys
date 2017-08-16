@@ -72,6 +72,9 @@ class thekeys extends eqLogic {
     public function scanLockers() {
         $idgateway = $this->getConfiguration('idfield');
         $json = $this->callGateway('lockers');
+        if (!is_json($json) || $json['status'] != 'ok') {
+            log::add('thekeys', 'error', 'Passerelle injoignable');
+        }
         foreach ($json['devices'] as $device) {
             $thekeys = self::byLogicalId($device['identifier'], 'thekeys');
             if (is_object($thekeys)) {
@@ -191,19 +194,29 @@ class thekeys extends eqLogic {
         $url = 'https://api.the-keys.fr/api/login_check';
         $user = config::byKey('username','thekeys');
         $pass = config::byKey('password','thekeys');
-        $request_http = new com_http($url);
-        $request_http->setHeader(array('Content-Type: application/x-www-form-urlencoded'));
-        $data = array(
-            '_username' => $user,
-            '_password' => $pass,
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL,$url);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        $headers = [
+            'Content-Type: application/x-www-form-urlencoded'
+        ];
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        $fields = array(
+            '_username' => urlencode($user),
+            '_password' => urlencode($pass),
         );
-        $request_http->setPost($data);
-        $output = $request_http->exec(30);
-        $json = json_decode($output, true);
+        $fields_string = '';
+        foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
+        rtrim($fields_string, '&');
+        curl_setopt($curl,CURLOPT_POST, count($fields));
+        curl_setopt($curl,CURLOPT_POSTFIELDS, $fields_string);
+        curl_setopt($curl,CURLOPT_RETURNTRANSFER , 1);
+        $json = json_decode(curl_exec($curl), true);
+        curl_close ($curl);
         $timestamp = time() + (2 * 60 * 60);
         config::save('token', $json['token'],  'thekeys');
         config::save('timestamp', $timestamp,  'thekeys');
-        log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
+        //log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
         return;
     }
 
