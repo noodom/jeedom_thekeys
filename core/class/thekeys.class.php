@@ -91,12 +91,12 @@ class thekeys extends eqLogic {
         thekeys::authCloud();
         foreach (eqLogic::byType('thekeys', true) as $location) {
             if ($location->getConfiguration('type') == 'locker') {
-                $url = 'partage/all/serrure/' . $this->getConfiguration('id');
+                $url = 'partage/all/serrure/' . $location->getConfiguration('id');
                 $json = thekeys::callCloud($url);
                 //update 'share' . $idtrouve + infos sur la plage horaire
                 foreach ($json['data']['partages_accessoire'] as $share) {
-                    $this->setConfiguration('share' . $share['accessoire']['id_accessoire'],1);
-                    $this->setConfiguration('code' . $share['accessoire']['id_accessoire'],$share['accessoire']['code']);
+                    $location->setConfiguration('share' . $share['accessoire']['id_accessoire'],1);
+                    $location->setConfiguration('code' . $share['accessoire']['id_accessoire'],$share['accessoire']['code']);
                 }
             }
         }
