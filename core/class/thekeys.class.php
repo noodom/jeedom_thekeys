@@ -71,19 +71,18 @@ class thekeys extends eqLogic {
 
     public function scanLockers() {
         $idgateway = $this->getConfiguration('idfield');
-        $json = $this->callGateway('search');
+        $json = $this->callGateway('lockers');
         foreach ($json['devices'] as $device) {
             $thekeys = self::byLogicalId($device['identifier'], 'thekeys');
-            if (!is_object($thekeys)) {
-                return;
+            if (is_object($thekeys)) {
+                $thekeys->setConfiguration('rssi',$device['rssi']);
+                $thekeys->setConfiguration('visible' . $location->getConfiguration('id'),1);
+                $thekeys->save();
+                $value = ($key['etat'] == 'open') ? 0:1;
+                $thekeys->checkAndUpdateCmd('status',$value);
+                $thekeys->checkAndUpdateCmd('battery',$key['battery']/1000);
+                $thekeys->batteryStatus($key['battery']/40);;
             }
-            $thekeys->setConfiguration('rssi',$device['rssi']);
-            $thekeys->setConfiguration('visible' . $location->getConfiguration('id'),1);
-            $thekeys->save();
-            $value = ($key['etat'] == 'open') ? 0:1;
-            $thekeys->checkAndUpdateCmd('status',$value);
-            $thekeys->checkAndUpdateCmd('battery',$key['battery']/1000);
-            $thekeys->batteryStatus($key['battery']/40);
         }
     }
 
