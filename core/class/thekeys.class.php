@@ -46,6 +46,9 @@ class thekeys extends eqLogic {
                 $thekeys->setConfiguration('nom', $key['nom']);
                 //$thekeys->setConfiguration('battery', $key['battery']);
                 $thekeys->save();
+                event::add('thekeys::found', array(
+                    'message' => __('Nouvelle serrure ' . $key['nom'], __FILE__),
+                ));
             }
             $thekeys->loadCmdFromConf($thekeys->getConfiguration('type'));
             $value = ($key['etat'] == 'open') ? 0:1;
