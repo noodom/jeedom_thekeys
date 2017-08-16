@@ -98,8 +98,8 @@ class thekeys extends eqLogic {
                 $thekeys->save();
                 //$value = ($key['etat'] == 'open') ? 0:1;
                 //$thekeys->checkAndUpdateCmd('status',$value);
-                $thekeys->checkAndUpdateCmd('battery',$key['battery']/1000);
-                $thekeys->batteryStatus($key['battery']/40);;
+                $thekeys->checkAndUpdateCmd('battery',$device['battery']/1000);
+                $thekeys->batteryStatus($device['battery']/40);;
             }
         }
     }
@@ -116,7 +116,7 @@ class thekeys extends eqLogic {
                 //update 'share' . $idtrouve + infos sur la plage horaire
                 foreach ($json['data']['partages_accessoire'] as $share) {
                     $location->setConfiguration('share' . $share['accessoire']['id_accessoire'],1);
-                    $location->setConfiguration('code' . $share['accessoire']['id_accessoire'],$share['accessoire']['code']);
+                    $location->setConfiguration('code' . $share['accessoire']['id_accessoire'],$share['code']);
                 }
             }
         }
