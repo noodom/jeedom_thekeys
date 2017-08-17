@@ -279,12 +279,13 @@ class thekeysCmd extends cmd {
             case 'locker' :
             $eqLogic = $this->getEqLogic();
             $gatewayid = $eqLogic->getConfiguration('gateway');
-            $gateway = self::byLogicalId($gatewayid, 'thekeys');
+            $gateway = thekeys::byLogicalId($gatewayid, 'thekeys');
             if (is_object($gateway)) {
               $gateway->callGateway($this->getConfiguration('value'),$eqLogic->getConfiguration('id_serrure'),$eqLogic->getConfiguration('code' .$gatewayid));
             } else {
               log::add('thekeys', 'debug', 'Gateway non existante : ' . $gatewayid);
             }
+            log::add('thekeys', 'debug', 'Commande : ' . $this->getConfiguration('value') . ' ' . $eqLogic->getConfiguration('id_serrure') . ' ' . $eqLogic->getConfiguration('code' .$gatewayid));
             return true;
         }
         return true;
