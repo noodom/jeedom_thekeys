@@ -286,6 +286,7 @@ class thekeysCmd extends cmd {
               log::add('thekeys', 'debug', 'Gateway non existante : ' . $gatewayid);
             }
             log::add('thekeys', 'debug', 'Commande : ' . $this->getConfiguration('value') . ' ' . $eqLogic->getConfiguration('id_serrure') . ' ' . $eqLogic->getConfiguration('code' .$gatewayid));
+            thekeys::updateUser();
             return true;
         }
         return true;
