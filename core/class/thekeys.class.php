@@ -89,7 +89,7 @@ class thekeys extends eqLogic {
         /*if (!is_array($json) || $json['status'] != 'ok') {
             log::add('thekeys', 'error', 'Passerelle injoignable');
         }*/
-        if (!isset$json['devices']) {
+        if (!isset($json['devices']) {
           return;
         }
         foreach ($json['devices'] as $device) {
