@@ -64,7 +64,7 @@ class thekeys extends eqLogic {
         $idgateway = $this->getConfiguration('idfield');
         $nbgateway = 0;
         foreach (eqLogic::byType('thekeys', true) as $location) {
-            if ($location->getConfiguration('type') == 'locker' && $location->getConfiguration('share' . $idgateway, 0) != 1 && $location->getConfiguration('accessible' . $idgateway, 0) == 1) {
+            if ($location->getConfiguration('type') == 'locker' && $location->getConfiguration('share' . $idgateway, 0) != 1 && $location->getConfiguration('visible' . $idgateway, 0) == 1) {
                 $url = 'partage/create/' . $location->getConfiguration('id') . '/accessoire/' . $idgateway;
                 $data = array('partage_accessoire[description]' => '', 'partage_accessoire[nom]' => $this->getName());
                 $json = thekeys::callCloud($url,$data);
@@ -93,13 +93,13 @@ class thekeys extends eqLogic {
             $thekeys = self::byLogicalId($device['identifier'], 'thekeys');
             if (is_object($thekeys)) {
                 $thekeys->setConfiguration('rssi',$device['rssi']);
-                $thekeys->setConfiguration('visible' . $this->getConfiguration('idfield'),1);
+                $thekeys->setConfiguration('visible' . $idgateway,1);
                 $thekeys->save();
                 //$value = ($key['etat'] == 'open') ? 0:1;
                 //$thekeys->checkAndUpdateCmd('status',$value);
                 $thekeys->checkAndUpdateCmd('battery',$device['battery']/1000);
                 $thekeys->batteryStatus($device['battery']/40);;
-                log::add('thekeys', 'debug', 'Rafraichissement serrur : ' . $device['identifier'] . ' ' . $device['battery'] . ' ' . $device['rssi']);
+                log::add('thekeys', 'debug', 'Rafraichissement serrure : ' . $device['identifier'] . ' ' . $device['battery'] . ' ' . $device['rssi']);
             }
         }
     }
@@ -115,6 +115,7 @@ class thekeys extends eqLogic {
                 }*/
                 //update 'share' . $idtrouve + infos sur la plage horaire
                 foreach ($json['data']['partages_accessoire'] as $share) {
+                    log::add('thekeys', 'debug', 'Partage serrure : ' . $share['accessoire']['id_accessoire'] . ' ' . $share['code']);
                     $location->setConfiguration('share' . $share['accessoire']['id_accessoire'],1);
                     $location->setConfiguration('code' . $share['accessoire']['id_accessoire'],$share['code']);
                     $location->save();
@@ -124,6 +125,22 @@ class thekeys extends eqLogic {
     }
 
     public function postAjax() {
+        if ($this->getConfiguration('typeSelect') != $this->getConfiguration('type')) {
+            $this->setConfiguration('type',$this->getConfiguration('typeSelect'));
+            $this->save();
+        }
+        $this->loadCmdFromConf($this->getConfiguration('type'));
+        if ($this->getConfiguration('type') == 'gateway') {
+            $this->setLogicalId($this->getConfiguration('idfield'));
+            $this->save();
+            $this->allowLockers();
+            event::add('thekeys::found', array(
+                'message' => __('Nouvelle gateway' , __FILE__),
+            ));
+        }
+    }
+
+    public function postSave() {
         if ($this->getConfiguration('typeSelect') != $this->getConfiguration('type')) {
             $this->setConfiguration('type',$this->getConfiguration('typeSelect'));
             $this->save();
