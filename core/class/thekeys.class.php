@@ -89,6 +89,9 @@ class thekeys extends eqLogic {
         /*if (!is_array($json) || $json['status'] != 'ok') {
             log::add('thekeys', 'error', 'Passerelle injoignable');
         }*/
+        if (!isset$json['devices']) {
+          return;
+        }
         foreach ($json['devices'] as $device) {
             $thekeys = self::byLogicalId($device['identifier'], 'thekeys');
             if (is_object($thekeys)) {
@@ -250,9 +253,9 @@ class thekeys extends eqLogic {
             $ts = time();
             $key = hash_hmac('sha512',$ts,$code);
             $hash = base64_encode($key);
-            $data = array('hash' => $hash, 'identifier' => $id, 'ts' => $ts);
+            $fields = array('hash' => $hash, 'identifier' => $id, 'ts' => $ts);
             $fields_string = '';
-            foreach($data as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
+            foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
             rtrim($fields_string, '&');
             curl_setopt($curl,CURLOPT_POST, count($fields));
             curl_setopt($curl,CURLOPT_POSTFIELDS, $fields_string);
