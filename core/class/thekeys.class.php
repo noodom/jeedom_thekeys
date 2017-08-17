@@ -224,6 +224,7 @@ class thekeys extends eqLogic {
         $url = 'http://' . $this->getConfiguration('ipfield') . '/' . $uri;
         $request_http = new com_http($url);
         if ($uri != ' lockers') {
+            ini_set('date.timezone', 'UTC');
             $ts = time();
             $key = hash_hmac('sha512',$ts,$code);
             $hash = base64_encode($key);
@@ -231,6 +232,7 @@ class thekeys extends eqLogic {
             $request_http->setPost($data);
         }
         $output = $request_http->exec(30);
+        log::add('thekeys', 'debug', 'Retour : ' . $output);
         $json = json_decode($output, true);
         log::add('thekeys', 'debug', 'URL : ' . $url);
         //log::add('thekeys', 'debug', 'Authorization: Bearer ' . config::byKey('token','thekeys'));
