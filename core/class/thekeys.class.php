@@ -220,7 +220,7 @@ class thekeys extends eqLogic {
         return $json;
     }
 
-    public function callGateway($uri,$id = '', $code = '') {
+    /*public function callGateway($uri,$id = '', $code = '') {
         $url = 'http://' . $this->getConfiguration('ipfield') . '/' . $uri;
         $request_http = new com_http($url);
         if ($uri != ' lockers') {
@@ -238,6 +238,30 @@ class thekeys extends eqLogic {
         //log::add('thekeys', 'debug', 'Authorization: Bearer ' . config::byKey('token','thekeys'));
         log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
         return $json;
+    }*/
+
+    public function callGateway($uri,$id = '', $code = '') {
+        $url = 'http://' . $this->getConfiguration('ipfield') . '/' . $uri;
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL,$url);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        if ($uri != ' lockers') {
+            ini_set('date.timezone', 'UTC');
+            $ts = time();
+            $key = hash_hmac('sha512',$ts,$code);
+            $hash = base64_encode($key);
+            $data = array('hash' => $hash, 'identifier' => $id, 'ts' => $ts);
+            $fields_string = '';
+            foreach($data as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
+            rtrim($fields_string, '&');
+            curl_setopt($curl,CURLOPT_POST, count($fields));
+            curl_setopt($curl,CURLOPT_POSTFIELDS, $fields_string);
+        }
+        curl_setopt($curl,CURLOPT_RETURNTRANSFER , 1);
+        $json = json_decode(curl_exec($curl), true);
+        curl_close ($curl);
+        log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
+        return;
     }
 
     public function authCloud() {
