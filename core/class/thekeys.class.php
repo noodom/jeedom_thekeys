@@ -256,6 +256,7 @@ class thekeys extends eqLogic {
             rtrim($fields_string, '&');
             curl_setopt($curl,CURLOPT_POST, count($fields));
             curl_setopt($curl,CURLOPT_POSTFIELDS, $fields_string);
+            log::add('thekeys', 'debug', 'Array : ' . print_r($data, true));
         }
         curl_setopt($curl,CURLOPT_RETURNTRANSFER , 1);
         $json = json_decode(curl_exec($curl), true);
