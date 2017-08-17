@@ -140,11 +140,7 @@ class thekeys extends eqLogic {
         }
     }
 
-    public function postSave() {
-        if ($this->getConfiguration('typeSelect') != $this->getConfiguration('type')) {
-            $this->setConfiguration('type',$this->getConfiguration('typeSelect'));
-            $this->save();
-        }
+    /*public function postSave() {
         $this->loadCmdFromConf($this->getConfiguration('type'));
         if ($this->getConfiguration('type') == 'gateway') {
             $this->setLogicalId($this->getConfiguration('idfield'));
@@ -154,7 +150,7 @@ class thekeys extends eqLogic {
                 'message' => __('Nouvelle gateway' , __FILE__),
             ));
         }
-    }
+    }*/
 
     /*public function preSave() {
         if ($this->getConfiguration('typeSelect') != $this->getConfiguration('type')) {
