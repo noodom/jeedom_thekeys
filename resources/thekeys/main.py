@@ -16,12 +16,11 @@ except ImportError:
     import httplib as http_client
 http_client.HTTPConnection.debuglevel = 1
 
-DEFAULT_HOST = "192.168.0.101"
 debug = False
 
 class Gateway:
 
-    def __init__(self):
+    def __init__(self, host):
         if debug:
             # You must initialize logging, otherwise you'll not see debug output.
             logging.basicConfig()
@@ -29,7 +28,7 @@ class Gateway:
             requests_log = logging.getLogger("requests.packages.urllib3")
             requests_log.setLevel(logging.DEBUG)
             requests_log.propagate = True
-        self.host = DEFAULT_HOST
+        self.host = hos
 
     def set_host(self, host):
         self.host = host
