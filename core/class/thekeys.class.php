@@ -31,9 +31,8 @@ class thekeys extends eqLogic {
                 $thekeys = new thekeys();
                 $thekeys->setEqType_name('thekeys');
                 $thekeys->setLogicalId($key['id_serrure']);
-                $thekeys->setIsEnable(1);
-                $thekeys->setIsVisible(1);
                 $thekeys->setName($key['nom'] . ' ' . $key['id_serrure']);
+                $thekeys->setIsEnable(1);
                 $thekeys->setConfiguration('type', 'locker');
                 $thekeys->setConfiguration('id', $key['id']);
                 $thekeys->setConfiguration('id_serrure', $key['id_serrure']);
@@ -71,7 +70,7 @@ class thekeys extends eqLogic {
                 $json = thekeys::callCloud($url,$data);
             }
             if ($location->getConfiguration('type') == 'gateway') {
-                $nbgateway = $nbgateway +1;
+                $nbgateway ++;
             }
         }
         if ($nbgateway == 1) {

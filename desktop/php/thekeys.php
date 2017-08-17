@@ -138,7 +138,7 @@ $eqLogics = eqLogic::byType('thekeys');
                                 <div class="col-sm-3">
                                     <select class="form-control eqLogicAttr configuration" data-l1key="configuration" data-l2key="gateway">
                                         <?php
-                                        foreach (eqLogic::byType('geotrav', true) as $location) {
+                                        foreach (eqLogic::byType('thekeys', true) as $location) {
                                             if ($location->getConfiguration('type') == 'gateway') {
                                                 echo '<option value="' . $location->getLogicalId() . '">' . $location->getName() . '</option>';
                                             }
