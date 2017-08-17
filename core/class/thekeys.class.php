@@ -93,12 +93,13 @@ class thekeys extends eqLogic {
             $thekeys = self::byLogicalId($device['identifier'], 'thekeys');
             if (is_object($thekeys)) {
                 $thekeys->setConfiguration('rssi',$device['rssi']);
-                $thekeys->setConfiguration('visible' . $this->getConfiguration('id'),1);
+                $thekeys->setConfiguration('visible' . $this->getConfiguration('idfield'),1);
                 $thekeys->save();
                 //$value = ($key['etat'] == 'open') ? 0:1;
                 //$thekeys->checkAndUpdateCmd('status',$value);
                 $thekeys->checkAndUpdateCmd('battery',$device['battery']/1000);
                 $thekeys->batteryStatus($device['battery']/40);;
+                log::add('thekeys', 'debug', 'Rafraichissement serrur : ' . $device['identifier'] . ' ' . $device['battery'] . ' ' . $device['rssi']);
             }
         }
     }
@@ -116,6 +117,7 @@ class thekeys extends eqLogic {
                 foreach ($json['data']['partages_accessoire'] as $share) {
                     $location->setConfiguration('share' . $share['accessoire']['id_accessoire'],1);
                     $location->setConfiguration('code' . $share['accessoire']['id_accessoire'],$share['code']);
+                    $location->save();
                 }
             }
         }
@@ -263,11 +265,12 @@ class thekeysCmd extends cmd {
         switch ($this->getConfiguration('type')) {
             case 'locker' :
             $eqLogic = $this->getEqLogic();
-            $gateway = self::byLogicalId($eqLogic->getConfiguration('gateway'), 'thekeys');
+            $gatewayid = $eqLogic->getConfiguration('gateway');
+            $gateway = self::byLogicalId($gatewayid, 'thekeys');
             if (is_object($gateway)) {
-              $gateway->callGateway($this->getConfiguration('value'),$eqLogic->getConfiguration('id_serrure'),$eqLogic->getConfiguration('code' . $eqLogic->getConfiguration('gateway')));
+              $gateway->callGateway($this->getConfiguration('value'),$eqLogic->getConfiguration('id_serrure'),$eqLogic->getConfiguration('code' .$gatewayid));
             } else {
-              log::add('thekeys', 'debug', 'Gateway non existante : ' . $eqLogic->getConfiguration('gateway'));
+              log::add('thekeys', 'debug', 'Gateway non existante : ' . $gatewayid);
             }
             return true;
         }
