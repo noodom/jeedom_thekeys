@@ -89,9 +89,6 @@ class thekeys extends eqLogic {
         /*if (!is_array($json) || $json['status'] != 'ok') {
             log::add('thekeys', 'error', 'Passerelle injoignable');
         }*/
-        if (!isset($json['devices'])) {
-          return;
-        }
         foreach ($json['devices'] as $device) {
             $thekeys = self::byLogicalId($device['identifier'], 'thekeys');
             if (is_object($thekeys)) {
@@ -117,9 +114,6 @@ class thekeys extends eqLogic {
                     log::add('thekeys', 'error', 'Erreur dans la vérification des partages');
                 }*/
                 //update 'share' . $idtrouve + infos sur la plage horaire
-                if (!isset($json['data'])) {
-                  return;
-                }
                 foreach ($json['data']['partages_accessoire'] as $share) {
                     log::add('thekeys', 'debug', 'Partage serrure : ' . $share['accessoire']['id_accessoire'] . ' ' . $share['code']);
                     $location->setConfiguration('share' . $share['accessoire']['id_accessoire'],1);
@@ -145,29 +139,6 @@ class thekeys extends eqLogic {
             ));
         }
     }
-
-    /*public function postSave() {
-        $this->loadCmdFromConf($this->getConfiguration('type'));
-        if ($this->getConfiguration('type') == 'gateway') {
-            $this->setLogicalId($this->getConfiguration('idfield'));
-            $this->save();
-            $this->allowLockers();
-            event::add('thekeys::found', array(
-                'message' => __('Nouvelle gateway' , __FILE__),
-            ));
-        }
-    }*/
-
-    /*public function preSave() {
-        if ($this->getConfiguration('typeSelect') != $this->getConfiguration('type')) {
-            $this->setConfiguration('type',$this->getConfiguration('typeSelect'));
-        }
-        $this->loadCmdFromConf($this->getConfiguration('type'));
-        if ($this->getConfiguration('type') == 'gateway') {
-            $this->setLogicalId($this->getConfiguration('idfield'));
-            $this->allowLockers();
-        }
-    }*/
 
     public function loadCmdFromConf($type) {
         if (!is_file(dirname(__FILE__) . '/../config/devices/' . $type . '.json')) {
@@ -254,7 +225,7 @@ class thekeys extends eqLogic {
         if ($uri != ' lockers') {
             ini_set('date.timezone', 'UTC');
             $ts = time();
-            $key = hash_hmac('sha512',$ts,$code);
+            $key = hash_hmac('sha256',$ts,$code,true);
             $hash = base64_encode($key);
             $fields = array('hash' => $hash, 'identifier' => $id, 'ts' => $ts);
             $fields_string = '';
