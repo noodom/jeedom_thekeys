@@ -66,7 +66,7 @@ class thekeys extends eqLogic {
         foreach (eqLogic::byType('thekeys', true) as $location) {
             if ($location->getConfiguration('type') == 'locker' && $location->getConfiguration('share' . $idgateway, '0') != '1' && $location->getConfiguration('visible' . $idgateway, '0') == '1') {
                 $url = 'partage/create/' . $location->getConfiguration('id') . '/accessoire/' . $idgateway;
-                $data = array('partage_accessoire[description]' => '', 'partage_accessoire[nom]' => $this->getName());
+                $data = array('partage_accessoire[description]' => '', 'partage_accessoire[nom]' => $this->getName(), 'partage_accessoire[actif]' => 1);
                 $json = thekeys::callCloud($url,$data);
                 if (isset($json['data']['code'])) {
                   $location->setConfiguration('share' . $idgateway,'1');
