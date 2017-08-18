@@ -109,10 +109,10 @@ class thekeys extends eqLogic {
                 log::add('thekeys', 'debug', 'Rafraichissement serrure : ' . $device['identifier'] . ' ' . $device['battery'] . ' ' . $device['rssi']);
             }
         }
-        $url = 'http://' . $this->getConfiguration('ipfield') . '/synchronise';
+        $url = 'http://' . $this->getConfiguration('ipfield') . '/synchronize';
         $request_http = new com_http($url);
         $output = $request_http->exec(30);
-        log::add('thekeys', 'debug', 'Synchronise : ' . $output);
+        log::add('thekeys', 'debug', 'Synchronise : ' . $url . ' ' . $output);
     }
 
     public function checkShare() {
