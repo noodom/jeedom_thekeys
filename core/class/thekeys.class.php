@@ -132,7 +132,7 @@ class thekeys extends eqLogic {
                       }
                     }
                 }
-                $location->save();  
+                $location->save();
             }
         }
     }
@@ -206,7 +206,7 @@ class thekeys extends eqLogic {
         $json = json_decode($output, true);
         log::add('thekeys', 'debug', 'URL : ' . $url);
         //log::add('thekeys', 'debug', 'Authorization: Bearer ' . config::byKey('token','thekeys'));
-        log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
+        log::add('thekeys', 'debug', 'Retour : ' . $output);
         return $json;
     }
 
