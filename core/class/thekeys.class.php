@@ -117,16 +117,22 @@ class thekeys extends eqLogic {
             if ($location->getConfiguration('type') == 'locker') {
                 $url = 'partage/all/serrure/' . $location->getConfiguration('id');
                 $json = thekeys::callCloud($url);
-                /*if (!is_array($json) || $json['status'] != '200') {
-                    log::add('thekeys', 'error', 'Erreur dans la vérification des partages');
-                }*/
-                //update 'share' . $idtrouve + infos sur la plage horaire
+                $find = array();
                 foreach ($json['data']['partages_accessoire'] as $share) {
                     log::add('thekeys', 'debug', 'Partage serrure : ' . $share['accessoire']['id_accessoire'] . ' ' . $share['code']);
-                    $location->setConfiguration('share' . $share['accessoire']['id_accessoire'],'1');
-                    $location->setConfiguration('code' . $share['accessoire']['id_accessoire'],$share['code']);
-                    $location->save();
+                    $find[$share['accessoire']['id_accessoire']] = $share['code'];
                 }
+                foreach (eqLogic::byType('thekeys', true) as $location2) {
+                    if ($location->getConfiguration('type') != 'locker') {
+                      if (isset($find[$location2->getConfiguration('idfield')])) {
+                        $location->setConfiguration('share' . $location2->getConfiguration('idfield'),'1');
+                        $location->setConfiguration('code' . $location2->getConfiguration('idfield'),$find[$location2->getConfiguration('idfield')]);
+                      } else {
+                        $location->setConfiguration('share' . $location2->getConfiguration('idfield'),'0');
+                      }
+                    }
+                }
+                $location->save();  
             }
         }
     }
