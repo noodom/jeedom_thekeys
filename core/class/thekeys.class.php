@@ -68,6 +68,11 @@ class thekeys extends eqLogic {
                 $url = 'partage/create/' . $location->getConfiguration('id') . '/accessoire/' . $idgateway;
                 $data = array('partage_accessoire[description]' => '', 'partage_accessoire[nom]' => $this->getName());
                 $json = thekeys::callCloud($url,$data);
+                if (isset($json['data']['code'])) {
+                  $location->setConfiguration('share' . $idgateway,'1');
+                  $location->setConfiguration('code' . $idgateway,$json['data']['code']);
+                  $location->save();
+                }
             }
             if ($location->getConfiguration('type') == 'gateway') {
                 $nbgateway ++;
