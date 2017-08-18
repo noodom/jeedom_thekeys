@@ -31,7 +31,7 @@ class thekeys extends eqLogic {
                 $thekeys = new thekeys();
                 $thekeys->setEqType_name('thekeys');
                 $thekeys->setLogicalId($key['id_serrure']);
-                $thekeys->setName($key['nom'] . ' ' . $key['id_serrure']);
+                $thekeys->setName('Serrure ' . $key['id_serrure']);
                 $thekeys->setIsEnable(1);
                 $thekeys->setConfiguration('type', 'locker');
                 $thekeys->setConfiguration('id', $key['id']);
@@ -142,7 +142,7 @@ class thekeys extends eqLogic {
     }
 
     public function postAjax() {
-        if ($this->getConfiguration('typeSelect') != $this->getConfiguration('type')) {
+        if (($this->getConfiguration('typeSelect') != $this->getConfiguration('type')) && $this->getConfiguration('type') != 'locker') {
             $this->setConfiguration('type',$this->getConfiguration('typeSelect'));
             $this->save();
         }
