@@ -169,9 +169,6 @@ class thekeys extends eqLogic {
         if (!is_array($device) || !isset($device['commands'])) {
             return true;
         }
-        if (isset($device['name'])) {
-            $this->setName('[' . $this->getLogicalId() . ']' . $device['name']);
-        }
         $this->import($device);
     }
 
