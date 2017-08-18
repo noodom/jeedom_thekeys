@@ -64,7 +64,7 @@ class thekeys extends eqLogic {
         $idgateway = $this->getConfiguration('idfield');
         $nbgateway = 0;
         foreach (eqLogic::byType('thekeys', true) as $location) {
-            if ($location->getConfiguration('type') == 'locker' && $location->getConfiguration('share' . $idgateway, 0) != 1 && $location->getConfiguration('visible' . $idgateway, 0) == 1) {
+            if ($location->getConfiguration('type') == 'locker' && $location->getConfiguration('share' . $idgateway, '0') != '1' && $location->getConfiguration('visible' . $idgateway, '0') == '1') {
                 $url = 'partage/create/' . $location->getConfiguration('id') . '/accessoire/' . $idgateway;
                 $data = array('partage_accessoire[description]' => '', 'partage_accessoire[nom]' => $this->getName());
                 $json = thekeys::callCloud($url,$data);
@@ -85,15 +85,17 @@ class thekeys extends eqLogic {
 
     public function scanLockers() {
         $idgateway = $this->getConfiguration('idfield');
-        $json = $this->callGateway('lockers');
-        /*if (!is_array($json) || $json['status'] != 'ok') {
-            log::add('thekeys', 'error', 'Passerelle injoignable');
-        }*/
+        $url = 'http://' . $this->getConfiguration('ipfield') . '/lockers';
+        $request_http = new com_http($url);
+        $output = $request_http->exec(30);
+        log::add('thekeys', 'debug', 'Scan : ' . $output);
+        $json = json_decode($output, true);
+        log::add('thekeys', 'debug', 'Scan : ' . $url);
         foreach ($json['devices'] as $device) {
             $thekeys = self::byLogicalId($device['identifier'], 'thekeys');
             if (is_object($thekeys)) {
                 $thekeys->setConfiguration('rssi',$device['rssi']);
-                $thekeys->setConfiguration('visible' . $idgateway,1);
+                $thekeys->setConfiguration('visible' . $idgateway,'1');
                 $thekeys->save();
                 //$value = ($key['etat'] == 'open') ? 0:1;
                 //$thekeys->checkAndUpdateCmd('status',$value);
@@ -116,7 +118,7 @@ class thekeys extends eqLogic {
                 //update 'share' . $idtrouve + infos sur la plage horaire
                 foreach ($json['data']['partages_accessoire'] as $share) {
                     log::add('thekeys', 'debug', 'Partage serrure : ' . $share['accessoire']['id_accessoire'] . ' ' . $share['code']);
-                    $location->setConfiguration('share' . $share['accessoire']['id_accessoire'],1);
+                    $location->setConfiguration('share' . $share['accessoire']['id_accessoire'],'1');
                     $location->setConfiguration('code' . $share['accessoire']['id_accessoire'],$share['code']);
                     $location->save();
                 }
@@ -196,26 +198,6 @@ class thekeys extends eqLogic {
         log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
         return $json;
     }
-
-    /*public function callGateway($uri,$id = '', $code = '') {
-        $url = 'http://' . $this->getConfiguration('ipfield') . '/' . $uri;
-        $request_http = new com_http($url);
-        if ($uri != ' lockers') {
-            ini_set('date.timezone', 'UTC');
-            $ts = time();
-            $key = hash_hmac('sha512',$ts,$code);
-            $hash = base64_encode($key);
-            $data = array('hash' => $hash, 'identifier' => $id, 'ts' => $ts);
-            $request_http->setPost($data);
-        }
-        $output = $request_http->exec(30);
-        log::add('thekeys', 'debug', 'Retour : ' . $output);
-        $json = json_decode($output, true);
-        log::add('thekeys', 'debug', 'URL : ' . $url);
-        //log::add('thekeys', 'debug', 'Authorization: Bearer ' . config::byKey('token','thekeys'));
-        log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
-        return $json;
-    }*/
 
     public function callGateway($uri,$id = '', $code = '') {
         $url = 'http://' . $this->getConfiguration('ipfield') . '/' . $uri;
