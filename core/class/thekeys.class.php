@@ -194,9 +194,9 @@ class thekeys extends eqLogic {
       $this->setConfiguration('type',$this->getConfiguration('typeSelect'));
       $this->save();
     }
+    //$this->loadCmdFromConf($this->getConfiguration('type'));
     if ($this->getConfiguration('type') == 'gateway') {
       $this->setLogicalId($this->getConfiguration('idfield'));
-      $this->loadCmdFromConf($this->getConfiguration('type'));
       $this->save();
       $this->scanLockers();
       event::add('thekeys::found', array(
