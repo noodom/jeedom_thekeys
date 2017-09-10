@@ -362,7 +362,8 @@ class thekeysCmd extends cmd {
       $eqLogic = $this->getEqLogic();
       $gatewayid = $this->getConfiguration('gateway');
       $gateway = thekeys::byLogicalId($gatewayid, 'thekeys');
-      $key = json_decode(config::byKey('shares_accessoire',  'thekeys'));
+      $key = json_decode(config::byKey('shares_accessoire','thekeys'));
+      log::add('thekeys', 'debug', 'Config : ' . config::byKey('shares_accessoire','thekeys'));
       $code = $key[$this->getConfiguration('id')][$eqLogic->getConfiguration('id')]['code'];
       if (is_object($gateway)) {
         $gateway->callGateway($this->getConfiguration('value'),$eqLogic->getConfiguration('id'),$code);
