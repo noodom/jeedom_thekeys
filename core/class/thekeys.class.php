@@ -358,13 +358,14 @@ class thekeysCmd extends cmd {
       $eqLogic = $this->getEqLogic();
       $gatewayid = $this->getConfiguration('gateway');
       $gateway = thekeys::byLogicalId($gatewayid, 'thekeys');
+      $key = json_decode(config::byKey('shares_accessoire',  'thekeys'));
+      $code = $key[$id][$this->getConfiguration('id')]['code'];
       if (is_object($gateway)) {
-        $key = json_decode(config::byKey('shares_accessoire',  'thekeys'));
-        $gateway->callGateway($this->getConfiguration('value'),$eqLogic->getConfiguration('id_serrure'),$key[$id][$this->getConfiguration('id')]['code']);
+        $gateway->callGateway($this->getConfiguration('value'),$eqLogic->getConfiguration('id_serrure'),$code);
       } else {
         log::add('thekeys', 'debug', 'Gateway non existante : ' . $gatewayid);
       }
-      log::add('thekeys', 'debug', 'Commande : ' . $this->getConfiguration('value') . ' ' . $eqLogic->getConfiguration('id_serrure') . ' ' . $this->getConfiguration('code'));
+      log::add('thekeys', 'debug', 'Commande : ' . $this->getConfiguration('value') . ' ' . $eqLogic->getConfiguration('id_serrure') . ' ' . $code);
       thekeys::updateUser();
       break;
       case 'gateway' :
