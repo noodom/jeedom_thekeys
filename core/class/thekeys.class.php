@@ -116,6 +116,8 @@ class thekeys extends eqLogic {
         $accessoire[$keyeq->getConfiguration('idfield')] = array();
       }
     }
+    log::add('thekeys', 'debug', 'Accessoire : ' . print_r($accessoire,true));
+    log::add('thekeys', 'debug', 'Phone : ' . print_r($phone,true));
     foreach (eqLogic::byType('thekeys', true) as $keyeq) {
       if ($keyeq->getConfiguration('type') == 'locker') {
         $url = 'partage/all/serrure/' . $keyeq->getConfiguration('id');
@@ -149,6 +151,8 @@ class thekeys extends eqLogic {
         }
       }
     }
+    log::add('thekeys', 'debug', 'Accessoire 2 : ' . print_r($accessoire,true));
+    log::add('thekeys', 'debug', 'Phone 2 : ' . print_r($phone,true));
     config::save('shares_accessoire', json_encode($accessoire),  'thekeys');
     config::save('shares_phone', json_encode($phone),  'thekeys');
   }
