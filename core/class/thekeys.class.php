@@ -75,8 +75,8 @@ class thekeys extends eqLogic {
         $thekeys->setConfiguration('rssi',$device['rssi']);
         $thekeys->save();
         //createCmds for this gateway
-        $thekeys->checkCmdOk($this->getId(), 'open', 'locker', 'Déverrouillage avec ' . $this->getName());
-        $thekeys->checkCmdOk($this->getId(), 'close', 'locker', 'Verrouillage avec ' . $this->getName());
+        $thekeys->checkCmdOk($this->getConfiguration('id'), 'open', 'locker', 'Déverrouillage avec ' . $this->getName());
+        $thekeys->checkCmdOk($this->getConfiguration('id'), 'close', 'locker', 'Verrouillage avec ' . $this->getName());
         $thekeys->checkAndUpdateCmd('battery',$device['battery']/1000);
         $thekeys->batteryStatus($device['battery']/40);;
         log::add('thekeys', 'debug', 'Rafraichissement serrure : ' . $device['identifier'] . ' ' . $device['battery'] . ' ' . $device['rssi']);
@@ -91,9 +91,9 @@ class thekeys extends eqLogic {
   public function cmdsShare() {
     foreach (eqLogic::byType('thekeys', true) as $keyeq) {
       if ($keyeq->getConfiguration('type') == 'locker') {
-        $this->checkCmdOk($keyeq->getId(), 'enable', 'locker', 'Activer partage avec ' . $keyeq->getName());
-        $this->checkCmdOk($keyeq->getId(), 'unable', 'locker', 'Désactiver partage avec ' . $keyeq->getName());
-        $this->checkCmdOk($keyeq->getId(), 'status', 'locker', 'Statut partage avec ' . $keyeq->getName());
+        $this->checkCmdOk($keyeq->getConfiguration('id'), 'enable', 'locker', 'Activer partage avec ' . $keyeq->getName());
+        $this->checkCmdOk($keyeq->getConfiguration('id'), 'unable', 'locker', 'Désactiver partage avec ' . $keyeq->getName());
+        $this->checkCmdOk($keyeq->getConfiguration('id'), 'status', 'locker', 'Statut partage avec ' . $keyeq->getName());
       }
     }
   }
