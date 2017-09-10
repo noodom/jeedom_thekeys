@@ -75,8 +75,8 @@ class thekeys extends eqLogic {
         $thekeys->setConfiguration('rssi',$device['rssi']);
         $thekeys->save();
         //createCmds for this gateway
-        $thekeys->checkCmdOk($thekeys->getConfiguration('id'), 'open', 'locker', 'Déverrouillage avec ' . $this->getName());
-        $thekeys->checkCmdOk($thekeys->getConfiguration('id'), 'close', 'locker', 'Verrouillage avec ' . $this->getName());
+        $thekeys->checkCmdOk($this->getConfiguration('idfield'), 'open', 'locker', 'Déverrouillage avec ' . $this->getName());
+        $thekeys->checkCmdOk($this->getConfiguration('idfield'), 'close', 'locker', 'Verrouillage avec ' . $this->getName());
         $thekeys->checkAndUpdateCmd('battery',$device['battery']/1000);
         $thekeys->batteryStatus($device['battery']/40);;
         log::add('thekeys', 'debug', 'Rafraichissement serrure : ' . $device['identifier'] . ' ' . $device['battery'] . ' ' . $device['rssi']);
@@ -360,7 +360,7 @@ class thekeysCmd extends cmd {
       $gatewayid = $this->getConfiguration('gateway');
       $gateway = thekeys::byLogicalId($gatewayid, 'thekeys');
       $key = config::byKey('shares_accessoire','thekeys');
-      log::add('thekeys', 'debug', 'Config : ' . print_r(config::byKey('shares_accessoire','thekeys')));
+      log::add('thekeys', 'debug', 'Config : ' . print_r(config::byKey('shares_accessoire','thekeys'),true));
       $code = $key[$this->getConfiguration('id')][$eqLogic->getConfiguration('id')]['code'];
       if (is_object($gateway)) {
         $gateway->callGateway($this->getConfiguration('value'),$eqLogic->getConfiguration('id'),$code);
