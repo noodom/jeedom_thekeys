@@ -13,10 +13,10 @@
                 "mobile": "lock"
             },
             "configuration": {
-				"type": "locker"
+				"category": "locker"
             },
             "isVisible": 1,
-            "logicalId": "locker:status"
+            "logicalId": "status"
         },
         {
             "name": "Batterie",
@@ -26,40 +26,10 @@
 				"generic_type": "DONT"
             },
             "configuration": {
-				"type": "locker"
+				"category": "locker"
             },
             "isVisible": 0,
-            "logicalId": "locker:battery"
-        },
-        {
-            "name": "Ouvrir",
-            "type": "action",
-            "subtype": "other",
-            "display": {
-				"icon": "<i class=\"fa fa-unlock\"><\/i>",
-                "generic_type": "LOCK_OPEN"
-            },
-            "configuration": {
-				"type": "locker",
-                "value": "open"
-            },
-            "value": "Statut",
-            "logicalId": "locker:open"
-        },
-        {
-            "name": "Fermer",
-            "type": "action",
-            "subtype": "other",
-            "display": {
-				"icon": "<i class=\"fa fa-lock\"><\/i>",
-                "generic_type": "LOCK_CLOSE"
-            },
-            "configuration": {
-				"type": "locker",
-                "value": "close"
-            },
-            "value": "Statut",
-            "logicalId": "locker:close"
+            "logicalId": "battery"
         }
     ]
 }

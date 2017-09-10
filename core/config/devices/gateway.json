@@ -1,3 +1,17 @@
 {
-    "name": "gateway"
+    "name": "gateway",
+    "commands": [
+        {
+            "name": "Rafraichir",
+            "type": "action",
+            "subtype": "other",
+            "display": {
+				"generic_type": "DONT"
+            },
+            "configuration": {
+				"category": "gateway"
+            },
+            "logicalId": "refresh"
+        }
+    ]
 }

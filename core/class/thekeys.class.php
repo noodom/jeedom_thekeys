@@ -61,40 +61,6 @@ class thekeys extends eqLogic {
     }
   }
 
-  public function allowLockers() {
-    if (substr(config::byKey('username','thekeys'),0,1) != '+') {
-      return;
-    }
-    thekeys::checkShare();
-    $this->scanLockers();
-    thekeys::authCloud();
-    $idgateway = $this->getConfiguration('idfield');
-    $nbgateway = 0;
-    foreach (eqLogic::byType('thekeys', true) as $location) {
-      if ($location->getConfiguration('type') == 'locker' && $location->getConfiguration('share' . $idgateway, '0') != '1' && $location->getConfiguration('visible' . $idgateway, '0') == '1') {
-        $url = 'partage/create/' . $location->getConfiguration('id') . '/accessoire/' . $idgateway;
-        $data = array('partage_accessoire[description]' => '', 'partage_accessoire[nom]' => $this->getName(), 'partage_accessoire[actif]' => 1);
-        $json = thekeys::callCloud($url,$data);
-        if (isset($json['data']['code'])) {
-          $location->setConfiguration('share' . $idgateway,'1');
-          $location->setConfiguration('code' . $idgateway,$json['data']['code']);
-          $location->save();
-        }
-      }
-      if ($location->getConfiguration('type') == 'gateway') {
-        $nbgateway ++;
-      }
-    }
-    if ($nbgateway == 1) {
-      foreach (eqLogic::byType('thekeys', true) as $location) {
-        if ($location->getConfiguration('type') == 'locker') {
-          $location->setConfiguration('gateway',$idgateway);
-          $location->save();
-        }
-      }
-    }
-  }
-
   public function scanLockers() {
     $idgateway = $this->getConfiguration('idfield');
     $url = 'http://' . $this->getConfiguration('ipfield') . '/lockers';
@@ -107,10 +73,10 @@ class thekeys extends eqLogic {
       $thekeys = self::byLogicalId($device['identifier'], 'thekeys');
       if (is_object($thekeys)) {
         $thekeys->setConfiguration('rssi',$device['rssi']);
-        $thekeys->setConfiguration('visible' . $idgateway,'1');
         $thekeys->save();
-        //$value = ($key['etat'] == 'open') ? 0:1;
-        //$thekeys->checkAndUpdateCmd('status',$value);
+        //createCmds for this gateway
+        $thekeys->checkCmdOk($this->getId(), 'open', 'locker', 'Déverrouillage avec ' . $this->getName());
+        $thekeys->checkCmdOk($this->getId(), 'close', 'locker', 'Verrouillage avec ' . $this->getName());
         $thekeys->checkAndUpdateCmd('battery',$device['battery']/1000);
         $thekeys->batteryStatus($device['battery']/40);;
         log::add('thekeys', 'debug', 'Rafraichissement serrure : ' . $device['identifier'] . ' ' . $device['battery'] . ' ' . $device['rssi']);
@@ -127,28 +93,86 @@ class thekeys extends eqLogic {
       return;
     }
     thekeys::authCloud();
-    foreach (eqLogic::byType('thekeys', true) as $location) {
-      if ($location->getConfiguration('type') == 'locker') {
-        $url = 'partage/all/serrure/' . $location->getConfiguration('id');
+    $accessoire = array();
+    $hone = array();
+    foreach (eqLogic::byType('thekeys', true) as $keyeq) {
+      if ($keyeq->getConfiguration('type') == 'gateway') {
+        $accessoire[$keyeq->getConfiguration('idfield')] = array();
+      }
+      if ($keyeq->getConfiguration('type') == 'phone') {
+        $phone[$keyeq->getConfiguration('idfield')] = array();
+      }
+      if ($keyeq->getConfiguration('type') == 'button') {
+        $accessoire[$keyeq->getConfiguration('idfield')] = array();
+      }
+    }
+    foreach (eqLogic::byType('thekeys', true) as $keyeq) {
+      if ($keyeq->getConfiguration('type') == 'locker') {
+        $url = 'partage/all/serrure/' . $keyeq->getConfiguration('id');
         $json = thekeys::callCloud($url);
-        $find = array();
         foreach ($json['data']['partages_accessoire'] as $share) {
           log::add('thekeys', 'debug', 'Partage serrure : ' . $share['accessoire']['id_accessoire'] . ' ' . $share['code']);
-          $find[$share['accessoire']['id_accessoire']] = $share['code'];
-        }
-        foreach (eqLogic::byType('thekeys', true) as $location2) {
-          if ($location->getConfiguration('type') != 'locker') {
-            if (isset($find[$location2->getConfiguration('idfield')])) {
-              $location->setConfiguration('share' . $location2->getConfiguration('idfield'),'1');
-              $location->setConfiguration('code' . $location2->getConfiguration('idfield'),$find[$location2->getConfiguration('idfield')]);
-            } else {
-              $location->setConfiguration('share' . $location2->getConfiguration('idfield'),'0');
+          if (!(isset($share['date_debut']) || isset($share['date_fin']) || isset($share['heure_debut']) || isset($share['heure_fin']))) {
+            //on vérifier que c'est un partage permanent, jeedom ne prend pas en compte les autres
+            $accessoire[$share['accessoire']['id_accessoire']][$keyeq->getConfiguration('id')]['id'] = $share['id'];
+            $accessoire[$share['accessoire']['id_accessoire']][$keyeq->getConfiguration('id')]['code'] = $share['code'];
+            //on sauvegarde le statut si bouton/phone, si gateway on s'assure d'etre en actif
+            $eqtest = thekeys::byLogicalId($share['accessoire']['id_accessoire'], 'thekeys');
+            if ($eqtest->getConfiguration('type') == 'gateway' && !$share['actif']) {
+                $keyeq->activateShare($share['accessoire']['id_accessoire']);
+            }
+            if ($eqtest->getConfiguration('type') == 'phone' || $eqtest->getConfiguration('type') == 'button') {
+              $value = ($share['actif']) ? 1:0;
+              $eqtest->checkAndUpdateCmd('status-'.$keyeq->getConfiguration('id'), $value);
             }
           }
         }
-        $location->save();
+        foreach ($accessoire as $stuff => $id) {
+          //boucle pour vérifier si chaque gateway/bouton possède une entrée de partage avec l'équipement en cours, sinon on appelle le createShare et on ajoute le retour
+          if ($stuff[$keyeq->getConfiguration('id')] !== null) {
+            $json = $this->createShare($id);
+            if (isset($json['data']['code'])) {
+              $accessoire[$keyeq->getConfiguration('id')]['id'] = $json['data']['id'];
+              $accessoire[$keyeq->getConfiguration('id')]['code'] = $json['data']['code'];
+            }
+          }
+        }
       }
     }
+    config::save('shares_accessoire', json_encode($accessoire),  'thekeys');
+  }
+
+  public function createShare($id) {
+    if (substr(config::byKey('username','thekeys'),0,1) != '+') {
+      return;
+    }
+    thekeys::authCloud();
+    $url = 'partage/create/' . $this->getConfiguration('id') . '/accessoire/' . $id;
+    $data = array('partage_accessoire[description]' => 'jeedom', 'partage_accessoire[nom]' => 'jeedom' . $id, 'partage_accessoire[actif]' => 1);
+    $json = thekeys::callCloud($url,$data);
+    return $json;
+  }
+
+  public function activateShare($id) {
+    if (substr(config::byKey('username','thekeys'),0,1) != '+') {
+      return;
+    }
+    thekeys::authCloud();
+    $key = json_decode(config::byKey('shares_accessoire',  'thekeys'));
+    $url = 'partage/accessoire/activer/' . $key[$id][$this->getConfiguration('id')]['id'];
+    $json = thekeys::callCloud($url);
+    thekeys::checkShare();
+  }
+
+  public function unactivateShare($id) {
+    if (substr(config::byKey('username','thekeys'),0,1) != '+') {
+      return;
+    }
+    thekeys::authCloud();
+    $key = json_decode(config::byKey('shares_accessoire',  'thekeys'));
+    $url = 'partage/accessoire/desactiver/' . $key[$id][$this->getConfiguration('id')]['id'];
+    $json = thekeys::callCloud($url);
+    thekeys::checkShare();
   }
 
   public function postAjax() {
@@ -157,10 +181,13 @@ class thekeys extends eqLogic {
       $this->save();
     }
     $this->loadCmdFromConf($this->getConfiguration('type'));
+    if ($this->getConfiguration('type') != 'locker') {
+
+    }
     if ($this->getConfiguration('type') == 'gateway') {
       $this->setLogicalId($this->getConfiguration('idfield'));
       $this->save();
-      $this->allowLockers();
+      $this->scanLockers();
       event::add('thekeys::found', array(
         'message' => __('Nouvelle gateway' , __FILE__),
       ));
@@ -182,43 +209,54 @@ class thekeys extends eqLogic {
     $this->import($device);
   }
 
-  public function cron15() {
-    foreach (eqLogic::byType('thekeys', true) as $location) {
-      if ($location->getConfiguration('type') == 'gateway') {
-        $location->scanLockers();
+  public function checkCmdOk($_id, $_value, $_category, $_name) {
+      $thekeysCmd = thekeysCmd::byEqLogicIdAndLogicalId($this->getId(),$_value . '-' . $_id);
+      if (!is_object($thekeysCmd)) {
+          log::add('thekeys', 'debug', 'Création de la commande ' . $_value . '-' . $_id);
+          $thekeysCmd = new thekeysCmd();
+          $thekeysCmd->setName(__($_name, __FILE__));
+          $thekeysCmd->setEqLogic_id($this->getId());
+          $thekeysCmd->setEqType('thekeys');
+          $thekeysCmd->setLogicalId($_value . '-' . $_id);
+          if ($_value == 'status') {
+              $thekeysCmd->setType('info');
+              $thekeysCmd->setSubType('binary');
+              $thekeysCmd->setTemplate("mobile",'lock' );
+              $thekeysCmd->setTemplate("dashboard",'lock' );
+          } else {
+              $thekeysCmd->setType('action');
+              $thekeysCmd->setSubType('other');
+              if ($_value == 'open' || $_type == 'allow') {
+                $thekeysCmd->setDisplay("icon",'"<i class=\"fa fa-unlock\"><\/i>"' );
+              } else {
+                $thekeysCmd->setDisplay("icon",'"<i class=\"fa fa-lock\"><\/i>"' );
+              }
+          }
+          $thekeysCmd->setConfiguration('value', $_value);
+          $thekeysCmd->setConfiguration('category', $_category);
+          if ($_category == 'locker') {
+              $thekeysCmd->setConfiguration('gateway', $_id);
+          }
+          $thekeysCmd->save();
       }
-    }
   }
 
-  public function cronHourly() {
+  public function cron15() {
+    //scan des lockers par les gateways toutes les 15mn
+    foreach (eqLogic::byType('thekeys', true) as $keyeq) {
+      if ($keyeq->getConfiguration('type') == 'gateway') {
+        $keyeq->scanLockers();
+      }
+    }
+    //update des infos de l'API (lockers existants, batterie, status) + verification que les share sont existants
     thekeys::updateUser();
     thekeys::checkShare();
   }
 
   public function pageConf() {
+    //sur sauvegarde page de conf update des infos de l'API (lockers existants, batterie, status) + verification que les share sont existants
     thekeys::updateUser();
     thekeys::checkShare();
-  }
-
-  public function callCloud($url,$data = array('format' => 'json')) {
-    $url = 'https://api.the-keys.fr/fr/api/v2/' . $url;
-    if (isset($data['format'])) {
-      $url .= '?_format=' . $data['format'];
-    }
-    if (time() > config::byKey('timestamp','thekeys')) {
-      thekeys::authCloud();
-    }
-    $request_http = new com_http($url);
-    $request_http->setHeader(array('Authorization: Bearer ' . config::byKey('token','thekeys')));
-    if (!isset($data['format'])) {
-      $request_http->setPost($data);
-    }
-    $output = $request_http->exec(30);
-    $json = json_decode($output, true);
-    log::add('thekeys', 'debug', 'URL : ' . $url);
-    //log::add('thekeys', 'debug', 'Authorization: Bearer ' . config::byKey('token','thekeys'));
-    log::add('thekeys', 'debug', 'Retour : ' . $output);
-    return $json;
   }
 
   public function callGateway($uri,$id = '', $code = '') {
@@ -244,6 +282,27 @@ class thekeys extends eqLogic {
     curl_close ($curl);
     log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
     return;
+  }
+
+  public function callCloud($url,$data = array('format' => 'json')) {
+    $url = 'https://api.the-keys.fr/fr/api/v2/' . $url;
+    if (isset($data['format'])) {
+      $url .= '?_format=' . $data['format'];
+    }
+    if (time() > config::byKey('timestamp','thekeys')) {
+      thekeys::authCloud();
+    }
+    $request_http = new com_http($url);
+    $request_http->setHeader(array('Authorization: Bearer ' . config::byKey('token','thekeys')));
+    if (!isset($data['format'])) {
+      $request_http->setPost($data);
+    }
+    $output = $request_http->exec(30);
+    $json = json_decode($output, true);
+    log::add('thekeys', 'debug', 'URL : ' . $url);
+    //log::add('thekeys', 'debug', 'Authorization: Bearer ' . config::byKey('token','thekeys'));
+    log::add('thekeys', 'debug', 'Retour : ' . $output);
+    return $json;
   }
 
   public function authCloud() {
@@ -283,21 +342,35 @@ class thekeysCmd extends cmd {
     if ($this->getType() == 'info') {
       return;
     }
-    switch ($this->getConfiguration('type')) {
+    switch ($this->getConfiguration('category')) {
       case 'locker' :
       $eqLogic = $this->getEqLogic();
-      $gatewayid = $eqLogic->getConfiguration('gateway');
+      $gatewayid = $this->getConfiguration('gateway');
       $gateway = thekeys::byLogicalId($gatewayid, 'thekeys');
       if (is_object($gateway)) {
-        $gateway->callGateway($this->getConfiguration('value'),$eqLogic->getConfiguration('id_serrure'),$eqLogic->getConfiguration('code' .$gatewayid));
+        $key = json_decode(config::byKey('shares_accessoire',  'thekeys'));
+        $gateway->callGateway($this->getConfiguration('value'),$eqLogic->getConfiguration('id_serrure'),$key[$id][$this->getConfiguration('id')]['code']);
       } else {
         log::add('thekeys', 'debug', 'Gateway non existante : ' . $gatewayid);
       }
-      log::add('thekeys', 'debug', 'Commande : ' . $this->getConfiguration('value') . ' ' . $eqLogic->getConfiguration('id_serrure') . ' ' . $eqLogic->getConfiguration('code' .$gatewayid));
+      log::add('thekeys', 'debug', 'Commande : ' . $this->getConfiguration('value') . ' ' . $eqLogic->getConfiguration('id_serrure') . ' ' . $this->getConfiguration('code'));
       thekeys::updateUser();
-      return true;
+      break;
+      case 'gateway' :
+      $eqLogic = $this->getEqLogic();
+      thekeys::updateUser();
+      thekeys::checkShare();
+      $eqLogic->scanLockers();
+      break;
+      default :
+      $eqLogic = $this->getEqLogic();
+      if ($this->getConfiguration('value') == 'activate') {
+        $eqLogic->activateShare();
+      } else {
+        $eqLogic->unactivateShare();
+      }
+      break;
     }
-    return true;
   }
 }
 

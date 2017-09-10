@@ -1,5 +1,5 @@
 {
-    "name": "button",
+    "name": "phone",
     "commands": [
         {
             "name": "Partage",
@@ -9,7 +9,7 @@
 				"generic_type": "DONT"
             },
             "configuration": {
-				"category": "button"
+				"category": "phone"
             },
             "isVisible": 1,
             "logicalId": "status"
@@ -22,9 +22,9 @@
 				"generic_type": "DONT"
             },
             "configuration": {
-				"category": "button"
+				"category": "phone"
             },
-            "logicalId": "desactivate"
+            "logicalId": "shareRemove"
         },
         {
             "name": "Activer partage",
@@ -34,9 +34,9 @@
 				"generic_type": "DONT"
             },
             "configuration": {
-				"category": "button"
+				"category": "phone"
             },
-            "logicalId": "activate"
+            "logicalId": "shareActive"
         }
     ]
 }
