@@ -88,6 +88,16 @@ class thekeys extends eqLogic {
     log::add('thekeys', 'debug', 'Synchronise : ' . $url . ' ' . $output);
   }
 
+  public function cmdsShare() {
+    foreach (eqLogic::byType('thekeys', true) as $keyeq) {
+      if ($keyeq->getConfiguration('type') == 'locker') {
+        $this->checkCmdOk($keyeq->getId(), 'enable', 'locker', 'Activer partage avec ' . $keyeq->getName());
+        $this->checkCmdOk($keyeq->getId(), 'unable', 'locker', 'Désactiver partage avec ' . $keyeq->getName());
+        $this->checkCmdOk($keyeq->getId(), 'status', 'locker', 'Statut partage avec ' . $keyeq->getName());
+      }
+    }
+  }
+
   public function checkShare() {
     if (substr(config::byKey('username','thekeys'),0,1) != '+') {
       return;
@@ -142,35 +152,35 @@ class thekeys extends eqLogic {
     config::save('shares_accessoire', json_encode($accessoire),  'thekeys');
   }
 
-  public function createShare($id) {
+  public function createShare($_id) {
     if (substr(config::byKey('username','thekeys'),0,1) != '+') {
       return;
     }
     thekeys::authCloud();
-    $url = 'partage/create/' . $this->getConfiguration('id') . '/accessoire/' . $id;
-    $data = array('partage_accessoire[description]' => 'jeedom', 'partage_accessoire[nom]' => 'jeedom' . $id, 'partage_accessoire[actif]' => 1);
+    $url = 'partage/create/' . $this->getConfiguration('id') . '/accessoire/' . $_id;
+    $data = array('partage_accessoire[description]' => 'jeedom', 'partage_accessoire[nom]' => 'jeedom' . $_id, 'partage_accessoire[actif]' => 1);
     $json = thekeys::callCloud($url,$data);
     return $json;
   }
 
-  public function activateShare($id) {
+  public function activateShare($_id) {
     if (substr(config::byKey('username','thekeys'),0,1) != '+') {
       return;
     }
     thekeys::authCloud();
     $key = json_decode(config::byKey('shares_accessoire',  'thekeys'));
-    $url = 'partage/accessoire/activer/' . $key[$id][$this->getConfiguration('id')]['id'];
+    $url = 'partage/accessoire/activer/' . $key[$_id][$this->getConfiguration('id')]['id'];
     $json = thekeys::callCloud($url);
     thekeys::checkShare();
   }
 
-  public function unactivateShare($id) {
+  public function unactivateShare($_id) {
     if (substr(config::byKey('username','thekeys'),0,1) != '+') {
       return;
     }
     thekeys::authCloud();
     $key = json_decode(config::byKey('shares_accessoire',  'thekeys'));
-    $url = 'partage/accessoire/desactiver/' . $key[$id][$this->getConfiguration('id')]['id'];
+    $url = 'partage/accessoire/desactiver/' . $key[$_id][$this->getConfiguration('id')]['id'];
     $json = thekeys::callCloud($url);
     thekeys::checkShare();
   }
@@ -233,6 +243,7 @@ class thekeys extends eqLogic {
         }
       }
       $thekeysCmd->setConfiguration('value', $_value);
+      $thekeysCmd->setConfiguration('id', $_id);
       $thekeysCmd->setConfiguration('category', $_category);
       if ($_category == 'locker') {
         $thekeysCmd->setConfiguration('gateway', $_id);
@@ -364,10 +375,11 @@ class thekeysCmd extends cmd {
       break;
       default :
       $eqLogic = $this->getEqLogic();
-      if ($this->getConfiguration('value') == 'activate') {
-        $eqLogic->activateShare();
+      $locker = thekeys::byLogicalId($this->getConfiguration('id'), 'thekeys');
+      if ($this->getConfiguration('value') == 'enable') {
+        $locker->activateShare($eqLogic->getId());
       } else {
-        $eqLogic->unactivateShare();
+        $locker->unactivateShare($eqLogic->getId());
       }
       break;
     }
