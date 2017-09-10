@@ -117,7 +117,6 @@ class thekeys extends eqLogic {
       }
     }
     log::add('thekeys', 'debug', 'Accessoire : ' . print_r($accessoire,true));
-    log::add('thekeys', 'debug', 'Phone : ' . print_r($phone,true));
     foreach (eqLogic::byType('thekeys', true) as $keyeq) {
       if ($keyeq->getConfiguration('type') == 'locker') {
         $url = 'partage/all/serrure/' . $keyeq->getConfiguration('id');
@@ -141,7 +140,8 @@ class thekeys extends eqLogic {
         }
         foreach ($accessoire as $id => $stuff) {
           //boucle pour vérifier si chaque gateway/bouton possède une entrée de partage avec l'équipement en cours, sinon on appelle le createShare et on ajoute le retour
-          if ($stuff[$id] !== null) {
+          log::add('thekeys', 'debug', 'ID : ' . $id . ' ' . print_r($stuff,true));
+          if ($stuff !== null) {
             $json = $keyeq->createShare($id);
             if (isset($json['data']['code'])) {
               $accessoire[$id]['id'] = $json['data']['id'];
@@ -152,7 +152,6 @@ class thekeys extends eqLogic {
       }
     }
     log::add('thekeys', 'debug', 'Accessoire 2 : ' . print_r($accessoire,true));
-    log::add('thekeys', 'debug', 'Phone 2 : ' . print_r($phone,true));
     config::save('shares_accessoire', json_encode($accessoire),  'thekeys');
     config::save('shares_phone', json_encode($phone),  'thekeys');
   }
