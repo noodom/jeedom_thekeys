@@ -226,7 +226,7 @@ class thekeys extends eqLogic {
       } else {
         $thekeysCmd->setType('action');
         $thekeysCmd->setSubType('other');
-        if ($_value == 'open' || $_type == 'allow') {
+        if ($_value == 'open' || $_value == 'enable') {
           $thekeysCmd->setDisplay("icon",'"<i class=\"fa fa-unlock\"><\/i>"' );
         } else {
           $thekeysCmd->setDisplay("icon",'"<i class=\"fa fa-lock\"><\/i>"' );
