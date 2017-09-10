@@ -75,8 +75,8 @@ class thekeys extends eqLogic {
         $thekeys->setConfiguration('rssi',$device['rssi']);
         $thekeys->save();
         //createCmds for this gateway
-        $thekeys->checkCmdOk($this->getConfiguration('id'), 'open', 'locker', 'Déverrouillage avec ' . $this->getName());
-        $thekeys->checkCmdOk($this->getConfiguration('id'), 'close', 'locker', 'Verrouillage avec ' . $this->getName());
+        $thekeys->checkCmdOk($thekeys->getConfiguration('id'), 'open', 'locker', 'Déverrouillage avec ' . $this->getName());
+        $thekeys->checkCmdOk($thekeys->getConfiguration('id'), 'close', 'locker', 'Verrouillage avec ' . $this->getName());
         $thekeys->checkAndUpdateCmd('battery',$device['battery']/1000);
         $thekeys->batteryStatus($device['battery']/40);;
         log::add('thekeys', 'debug', 'Rafraichissement serrure : ' . $device['identifier'] . ' ' . $device['battery'] . ' ' . $device['rssi']);
