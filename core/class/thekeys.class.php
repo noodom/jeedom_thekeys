@@ -119,7 +119,7 @@ class thekeys extends eqLogic {
             //on sauvegarde le statut si bouton/phone, si gateway on s'assure d'etre en actif
             $eqtest = thekeys::byLogicalId($share['accessoire']['id_accessoire'], 'thekeys');
             if ($eqtest->getConfiguration('type') == 'gateway' && !$share['actif']) {
-                $keyeq->activateShare($share['accessoire']['id_accessoire']);
+              $keyeq->activateShare($share['accessoire']['id_accessoire']);
             }
             if ($eqtest->getConfiguration('type') == 'phone' || $eqtest->getConfiguration('type') == 'button') {
               $value = ($share['actif']) ? 1:0;
@@ -210,35 +210,35 @@ class thekeys extends eqLogic {
   }
 
   public function checkCmdOk($_id, $_value, $_category, $_name) {
-      $thekeysCmd = thekeysCmd::byEqLogicIdAndLogicalId($this->getId(),$_value . '-' . $_id);
-      if (!is_object($thekeysCmd)) {
-          log::add('thekeys', 'debug', 'Création de la commande ' . $_value . '-' . $_id);
-          $thekeysCmd = new thekeysCmd();
-          $thekeysCmd->setName(__($_name, __FILE__));
-          $thekeysCmd->setEqLogic_id($this->getId());
-          $thekeysCmd->setEqType('thekeys');
-          $thekeysCmd->setLogicalId($_value . '-' . $_id);
-          if ($_value == 'status') {
-              $thekeysCmd->setType('info');
-              $thekeysCmd->setSubType('binary');
-              $thekeysCmd->setTemplate("mobile",'lock' );
-              $thekeysCmd->setTemplate("dashboard",'lock' );
-          } else {
-              $thekeysCmd->setType('action');
-              $thekeysCmd->setSubType('other');
-              if ($_value == 'open' || $_type == 'allow') {
-                $thekeysCmd->setDisplay("icon",'"<i class=\"fa fa-unlock\"><\/i>"' );
-              } else {
-                $thekeysCmd->setDisplay("icon",'"<i class=\"fa fa-lock\"><\/i>"' );
-              }
-          }
-          $thekeysCmd->setConfiguration('value', $_value);
-          $thekeysCmd->setConfiguration('category', $_category);
-          if ($_category == 'locker') {
-              $thekeysCmd->setConfiguration('gateway', $_id);
-          }
-          $thekeysCmd->save();
+    $thekeysCmd = thekeysCmd::byEqLogicIdAndLogicalId($this->getId(),$_value . '-' . $_id);
+    if (!is_object($thekeysCmd)) {
+      log::add('thekeys', 'debug', 'Création de la commande ' . $_value . '-' . $_id);
+      $thekeysCmd = new thekeysCmd();
+      $thekeysCmd->setName(__($_name, __FILE__));
+      $thekeysCmd->setEqLogic_id($this->getId());
+      $thekeysCmd->setEqType('thekeys');
+      $thekeysCmd->setLogicalId($_value . '-' . $_id);
+      if ($_value == 'status') {
+        $thekeysCmd->setType('info');
+        $thekeysCmd->setSubType('binary');
+        $thekeysCmd->setTemplate("mobile",'lock' );
+        $thekeysCmd->setTemplate("dashboard",'lock' );
+      } else {
+        $thekeysCmd->setType('action');
+        $thekeysCmd->setSubType('other');
+        if ($_value == 'open' || $_type == 'allow') {
+          $thekeysCmd->setDisplay("icon",'"<i class=\"fa fa-unlock\"><\/i>"' );
+        } else {
+          $thekeysCmd->setDisplay("icon",'"<i class=\"fa fa-lock\"><\/i>"' );
+        }
       }
+      $thekeysCmd->setConfiguration('value', $_value);
+      $thekeysCmd->setConfiguration('category', $_category);
+      if ($_category == 'locker') {
+        $thekeysCmd->setConfiguration('gateway', $_id);
+      }
+      $thekeysCmd->save();
+    }
   }
 
   public function cron15() {
