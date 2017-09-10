@@ -34,7 +34,7 @@ class thekeys extends eqLogic {
       if (!is_object($thekeys)) {
         $thekeys = new thekeys();
         $thekeys->setEqType_name('thekeys');
-        $thekeys->setLogicalId($key['id_serrure']);
+        $thekeys->setLogicalId($key['id']);
         $thekeys->setName('Serrure ' . $key['id_serrure']);
         $thekeys->setIsEnable(1);
         $thekeys->setConfiguration('type', 'locker');
@@ -75,8 +75,8 @@ class thekeys extends eqLogic {
         $thekeys->setConfiguration('rssi',$device['rssi']);
         $thekeys->save();
         //createCmds for this gateway
-        $thekeys->checkCmdOk($thekeys->getConfiguration('id_serrure'), 'open', 'locker', 'Déverrouillage avec ' . $this->getName());
-        $thekeys->checkCmdOk($thekeys->getConfiguration('id_serrure'), 'close', 'locker', 'Verrouillage avec ' . $this->getName());
+        $thekeys->checkCmdOk($thekeys->getConfiguration('id'), 'open', 'locker', 'Déverrouillage avec ' . $this->getName());
+        $thekeys->checkCmdOk($thekeys->getConfiguration('id'), 'close', 'locker', 'Verrouillage avec ' . $this->getName());
         $thekeys->checkAndUpdateCmd('battery',$device['battery']/1000);
         $thekeys->batteryStatus($device['battery']/40);;
         log::add('thekeys', 'debug', 'Rafraichissement serrure : ' . $device['identifier'] . ' ' . $device['battery'] . ' ' . $device['rssi']);
@@ -91,9 +91,9 @@ class thekeys extends eqLogic {
   public function cmdsShare() {
     foreach (eqLogic::byType('thekeys', true) as $keyeq) {
       if ($keyeq->getConfiguration('type') == 'locker') {
-        $this->checkCmdOk($keyeq->getConfiguration('id_serrure'), 'enable', 'locker', 'Activer partage avec ' . $keyeq->getName());
-        $this->checkCmdOk($keyeq->getConfiguration('id_serrure'), 'unable', 'locker', 'Désactiver partage avec ' . $keyeq->getName());
-        $this->checkCmdOk($keyeq->getConfiguration('id_serrure'), 'status', 'locker', 'Statut partage avec ' . $keyeq->getName());
+        $this->checkCmdOk($keyeq->getConfiguration('id'), 'enable', 'locker', 'Activer partage avec ' . $keyeq->getName());
+        $this->checkCmdOk($keyeq->getConfiguration('id'), 'unable', 'locker', 'Désactiver partage avec ' . $keyeq->getName());
+        $this->checkCmdOk($keyeq->getConfiguration('id'), 'status', 'locker', 'Statut partage avec ' . $keyeq->getName());
       }
     }
   }
@@ -118,14 +118,14 @@ class thekeys extends eqLogic {
     }
     foreach (eqLogic::byType('thekeys', true) as $keyeq) {
       if ($keyeq->getConfiguration('type') == 'locker') {
-        $url = 'partage/all/serrure/' . $keyeq->getConfiguration('id_serrure');
+        $url = 'partage/all/serrure/' . $keyeq->getConfiguration('id');
         $json = thekeys::callCloud($url);
         foreach ($json['data']['partages_accessoire'] as $share) {
           log::add('thekeys', 'debug', 'Partage serrure : ' . $share['accessoire']['id_accessoire'] . ' ' . $share['code']);
           if (!(isset($share['date_debut']) || isset($share['date_fin']) || isset($share['heure_debut']) || isset($share['heure_fin']))) {
             //on vérifier que c'est un partage permanent, jeedom ne prend pas en compte les autres
-            $accessoire[$share['accessoire']['id_accessoire']][$keyeq->getConfiguration('id_serrure')]['id'] = $share['id'];
-            $accessoire[$share['accessoire']['id_accessoire']][$keyeq->getConfiguration('id_serrure')]['code'] = $share['code'];
+            $accessoire[$share['accessoire']['id_accessoire']][$keyeq->getConfiguration('id')]['id'] = $share['id'];
+            $accessoire[$share['accessoire']['id_accessoire']][$keyeq->getConfiguration('id')]['code'] = $share['code'];
             //on sauvegarde le statut si bouton/phone, si gateway on s'assure d'etre en actif
             $eqtest = thekeys::byLogicalId($share['accessoire']['id_accessoire'], 'thekeys');
             if ($eqtest->getConfiguration('type') == 'gateway' && !$share['actif']) {
@@ -133,23 +133,24 @@ class thekeys extends eqLogic {
             }
             if ($eqtest->getConfiguration('type') == 'phone' || $eqtest->getConfiguration('type') == 'button') {
               $value = ($share['actif']) ? 1:0;
-              $eqtest->checkAndUpdateCmd('status-'.$keyeq->getConfiguration('id_serrure'), $value);
+              $eqtest->checkAndUpdateCmd('status-'.$keyeq->getConfiguration('id'), $value);
             }
           }
         }
         foreach ($accessoire as $id => $stuff) {
           //boucle pour vérifier si chaque gateway/bouton possède une entrée de partage avec l'équipement en cours, sinon on appelle le createShare et on ajoute le retour
-          if ($stuff[$keyeq->getConfiguration('id_serrure')] !== null) {
+          if ($stuff[$keyeq->getConfiguration('id')] !== null) {
             $json = $keyeq->createShare($share['accessoire']['id_accessoire']);
             if (isset($json['data']['code'])) {
-              $accessoire[$keyeq->getConfiguration('id_serrure')]['id'] = $json['data']['id'];
-              $accessoire[$keyeq->getConfiguration('id_serrure')]['code'] = $json['data']['code'];
+              $accessoire[$keyeq->getConfiguration('id')]['id'] = $json['data']['id'];
+              $accessoire[$keyeq->getConfiguration('id')]['code'] = $json['data']['code'];
             }
           }
         }
       }
     }
     config::save('shares_accessoire', json_encode($accessoire),  'thekeys');
+    config::save('shares_phone', json_encode($phone),  'thekeys');
   }
 
   public function createShare($_id) {
@@ -157,7 +158,7 @@ class thekeys extends eqLogic {
       return;
     }
     thekeys::authCloud();
-    $url = 'partage/create/' . $this->getConfiguration('id_serrure') . '/accessoire/' . $_id;
+    $url = 'partage/create/' . $this->getConfiguration('id') . '/accessoire/' . $_id;
     $data = array('partage_accessoire[description]' => 'jeedom', 'partage_accessoire[nom]' => 'jeedom' . $_id, 'partage_accessoire[actif]' => 1);
     $json = thekeys::callCloud($url,$data);
     return $json;
@@ -169,7 +170,7 @@ class thekeys extends eqLogic {
     }
     thekeys::authCloud();
     $key = json_decode(config::byKey('shares_accessoire',  'thekeys'));
-    $url = 'partage/accessoire/activer/' . $key[$_id][$this->getConfiguration('id_serrure')]['id'];
+    $url = 'partage/accessoire/activer/' . $key[$_id][$this->getConfiguration('id')]['id'];
     $json = thekeys::callCloud($url);
     thekeys::checkShare();
   }
@@ -180,7 +181,7 @@ class thekeys extends eqLogic {
     }
     thekeys::authCloud();
     $key = json_decode(config::byKey('shares_accessoire',  'thekeys'));
-    $url = 'partage/accessoire/desactiver/' . $key[$_id][$this->getConfiguration('id_serrure')]['id'];
+    $url = 'partage/accessoire/desactiver/' . $key[$_id][$this->getConfiguration('id')]['id'];
     $json = thekeys::callCloud($url);
     thekeys::checkShare();
   }
@@ -359,13 +360,13 @@ class thekeysCmd extends cmd {
       $gatewayid = $this->getConfiguration('gateway');
       $gateway = thekeys::byLogicalId($gatewayid, 'thekeys');
       $key = json_decode(config::byKey('shares_accessoire',  'thekeys'));
-      $code = $key[$gateway->getConfiguration('idfield')][$eqLogic->getConfiguration('id_serrure')]['code'];
+      $code = $key[$gateway->getConfiguration('idfield')][$eqLogic->getConfiguration('id')]['code'];
       if (is_object($gateway)) {
-        $gateway->callGateway($this->getConfiguration('value'),$eqLogic->getConfiguration('id_serrure'),$code);
+        $gateway->callGateway($this->getConfiguration('value'),$eqLogic->getConfiguration('id'),$code);
       } else {
         log::add('thekeys', 'debug', 'Gateway non existante : ' . $gatewayid);
       }
-      log::add('thekeys', 'debug', 'Commande : ' . $this->getConfiguration('value') . ' ' . $eqLogic->getConfiguration('id_serrure') . ' ' . $code);
+      log::add('thekeys', 'debug', 'Commande : ' . $this->getConfiguration('value') . ' ' . $eqLogic->getConfiguration('id') . ' ' . $code);
       thekeys::updateUser();
       break;
       case 'gateway' :
@@ -376,7 +377,7 @@ class thekeysCmd extends cmd {
       break;
       default :
       $eqLogic = $this->getEqLogic();
-      $locker = thekeys::byLogicalId($this->getConfiguration('id_serrure'), 'thekeys');
+      $locker = thekeys::byLogicalId($this->getConfiguration('id'), 'thekeys');
       if ($this->getConfiguration('value') == 'enable') {
         $locker->activateShare($eqLogic->getId());
       } else {
