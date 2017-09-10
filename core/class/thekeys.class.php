@@ -127,7 +127,7 @@ class thekeys extends eqLogic {
             }
           }
         }
-        foreach ($accessoire as $stuff => $id) {
+        foreach ($accessoire as $id => $stuff) {
           //boucle pour vérifier si chaque gateway/bouton possède une entrée de partage avec l'équipement en cours, sinon on appelle le createShare et on ajoute le retour
           if ($stuff[$keyeq->getConfiguration('id')] !== null) {
             $json = $keyeq->createShare($share['accessoire']['id_accessoire']);
