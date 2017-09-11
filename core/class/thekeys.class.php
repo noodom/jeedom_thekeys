@@ -53,7 +53,7 @@ class thekeys extends eqLogic {
           'message' => __('Nouvelle serrure ' . $key['nom'], __FILE__),
         ));
       }
-      $thekeysCmd = thekeysCmd::byEqLogicIdAndLogicalId($this->getId(),'status');
+      $thekeysCmd = thekeysCmd::byEqLogicIdAndLogicalId($thekeys->getId(),'status');
       if (!is_object($thekeysCmd)) {
         $thekeys->loadCmdFromConf($thekeys->getConfiguration('type'));
       }
