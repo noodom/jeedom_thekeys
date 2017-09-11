@@ -53,7 +53,10 @@ class thekeys extends eqLogic {
           'message' => __('Nouvelle serrure ' . $key['nom'], __FILE__),
         ));
       }
-      $thekeys->loadCmdFromConf($thekeys->getConfiguration('type'));
+      $thekeysCmd = thekeysCmd::byEqLogicIdAndLogicalId($this->getId(),'status');
+      if (!is_object($thekeysCmd)) {
+        $thekeys->loadCmdFromConf($thekeys->getConfiguration('type'));
+      }
       $value = ($key['etat'] == 'open') ? 0:1;
       $thekeys->checkAndUpdateCmd('status',$value);
       $thekeys->checkAndUpdateCmd('battery',$key['battery']/1000);
