@@ -208,9 +208,11 @@ class thekeys extends eqLogic {
         'message' => __('Nouvelle gateway' , __FILE__),
       ));
     }
-    if ($this->getConfiguration('type') == 'button') {
+    if ($this->getConfiguration('type') == 'button' || $this->getConfiguration('type') == 'phone') {
       $this->cmdsShare();
     }
+    thekeys::updateUser();
+    thekeys::checkShare();
   }
 
   public function loadCmdFromConf($type) {
