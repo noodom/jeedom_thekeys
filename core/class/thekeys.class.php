@@ -30,7 +30,7 @@ class thekeys extends eqLogic {
     $url = 'utilisateur/get/' . urlencode(config::byKey('username','thekeys'));
     $json = thekeys::callCloud($url);
     foreach ($json['data']['serrures'] as $key) {
-      $thekeys = self::byLogicalId($key['id_serrure'], 'thekeys');
+      $thekeys = thekeys::byLogicalId($key['id_serrure'], 'thekeys');
       if (!is_object($thekeys)) {
         $thekeys = new thekeys();
         $thekeys->setEqType_name('thekeys');
@@ -73,7 +73,7 @@ class thekeys extends eqLogic {
     $json = json_decode($output, true);
     log::add('thekeys', 'debug', 'Scan : ' . $url);
     foreach ($json['devices'] as $device) {
-      $thekeys = self::byLogicalId($device['identifier'], 'thekeys');
+      $thekeys = thekeys::byLogicalId($device['identifier'], 'thekeys');
       if (is_object($thekeys)) {
         $thekeys->setConfiguration('rssi',$device['rssi']);
         $thekeys->save();
@@ -200,7 +200,7 @@ class thekeys extends eqLogic {
       $this->save();
     }
     if ($this->getConfiguration('type') == 'gateway') {
-        $this->loadCmdFromConf($this->getConfiguration('type'));
+      $this->loadCmdFromConf($this->getConfiguration('type'));
       $this->setLogicalId($this->getConfiguration('idfield'));
       $this->save();
       $this->scanLockers();
@@ -211,8 +211,8 @@ class thekeys extends eqLogic {
     if ($this->getConfiguration('type') == 'button' || $this->getConfiguration('type') == 'phone') {
       $this->cmdsShare();
     }
-    thekeys::updateUser();
-    thekeys::checkShare();
+    self::updateUser();
+    self::checkShare();
   }
 
   public function loadCmdFromConf($type) {
