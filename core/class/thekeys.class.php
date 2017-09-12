@@ -390,8 +390,8 @@ class thekeysCmd extends cmd {
       $eqLogic = $this->getEqLogic();
       $key = config::byKey('shares_accessoire','thekeys');
       $locker = thekeys::byLogicalId($this->getConfiguration('id'), 'thekeys');
-      $id = $key[$eqLogic->getLogicalId()][$locker->getLogicalId()]['id'];
-      log::add('thekeys', 'debug', 'Config : ' . $eqLogic->getLogicalId() . ' ' . $locker->getLogicalId() . ' ' . print_r(config::byKey('shares_accessoire','thekeys'),true));
+      $id = $key[$eqLogic->getLogicalId()][$locker->getConfiguration('id')]['id'];
+      log::add('thekeys', 'debug', 'Config : ' . $eqLogic->getLogicalId() . ' ' . $locker->getConfiguration('id') . ' ' . print_r(config::byKey('shares_accessoire','thekeys'),true));
       if ($this->getConfiguration('value') == 'enable') {
         $locker->activateShare($id);
       } else {
