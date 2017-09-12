@@ -107,7 +107,7 @@ class thekeys extends eqLogic {
     }
     thekeys::authCloud();
     $accessoire = array();
-    $hone = array();
+    $phone = array();
     foreach (eqLogic::byType('thekeys', true) as $keyeq) {
       if ($keyeq->getConfiguration('type') == 'gateway') {
         $accessoire[$keyeq->getConfiguration('idfield')] = array();
@@ -209,10 +209,7 @@ class thekeys extends eqLogic {
       ));
     }
     if ($this->getConfiguration('type') == 'button') {
-        $this->loadCmdFromConf($this->getConfiguration('type'));
-      $this->setLogicalId($this->getConfiguration('idfield'));
-      $this->save();
-      $this->scanLockers();
+      $this->cmdsShare();
     }
   }
 
