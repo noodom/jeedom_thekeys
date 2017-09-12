@@ -21,6 +21,13 @@ $('#typeList').change(function(){
   } else {
     $('#gateway').hide();
   }
+  if (text == 'phone') {
+    $('#phone').show();
+    $('#id').hide();
+  } else {
+    $('#phone').hide();
+    $('#id').show();
+  }
 });
 
 function printEqLogic(_eqLogic){

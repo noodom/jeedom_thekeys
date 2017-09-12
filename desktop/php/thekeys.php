@@ -140,10 +140,11 @@ $eqLogics = eqLogic::byType('thekeys');
                   <select id="typeList" class="form-control eqLogicAttr configuration" data-l1key="configuration" data-l2key="typeSelect">
                     <option value="gateway">Gateway réseau</option>
                     <option value="button">Bouton clef</option>
+                    <option value="phone">Téléphone</option>
                   </select>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group" id="id">
                 <label class="col-sm-3 control-label">{{ID de l'équipement}}</label>
                 <div class="col-sm-3">
                   <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="idfield" type="text" placeholder="{{voir la doc}}">
@@ -153,6 +154,12 @@ $eqLogics = eqLogic::byType('thekeys');
                 <label class="col-sm-3 control-label">{{IP de la passerelle}}</label>
                 <div class="col-sm-3">
                   <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="ipfield" type="text" placeholder="{{voir la doc}}">
+                </div>
+              </div>
+              <div class="form-group" id="phone" style="display:none">
+                <label class="col-sm-3 control-label">{{Numéro de téléphone}}</label>
+                <div class="col-sm-3">
+                  <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="phonefield" type="text" placeholder="{{v+33}}">
                 </div>
               </div>
             </div>
