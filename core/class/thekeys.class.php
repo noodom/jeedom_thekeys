@@ -199,14 +199,20 @@ class thekeys extends eqLogic {
       $this->setConfiguration('type',$this->getConfiguration('typeSelect'));
       $this->save();
     }
-    //$this->loadCmdFromConf($this->getConfiguration('type'));
     if ($this->getConfiguration('type') == 'gateway') {
+        $this->loadCmdFromConf($this->getConfiguration('type'));
       $this->setLogicalId($this->getConfiguration('idfield'));
       $this->save();
       $this->scanLockers();
       event::add('thekeys::found', array(
         'message' => __('Nouvelle gateway' , __FILE__),
       ));
+    }
+    if ($this->getConfiguration('type') == 'button') {
+        $this->loadCmdFromConf($this->getConfiguration('type'));
+      $this->setLogicalId($this->getConfiguration('idfield'));
+      $this->save();
+      $this->scanLockers();
     }
   }
 
