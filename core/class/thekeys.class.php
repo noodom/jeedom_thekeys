@@ -94,9 +94,9 @@ class thekeys extends eqLogic {
   public function cmdsShare() {
     foreach (eqLogic::byType('thekeys', true) as $keyeq) {
       if ($keyeq->getConfiguration('type') == 'locker') {
-        $this->checkCmdOk($keyeq->getConfiguration('id'), 'enable', 'locker', 'Activer partage avec ' . $keyeq->getName());
-        $this->checkCmdOk($keyeq->getConfiguration('id'), 'unable', 'locker', 'Désactiver partage avec ' . $keyeq->getName());
-        $this->checkCmdOk($keyeq->getConfiguration('id'), 'status', 'locker', 'Statut partage avec ' . $keyeq->getName());
+        $this->checkCmdOk($keyeq->getConfiguration('id'), 'enable', 'button', 'Activer partage avec ' . $keyeq->getName());
+        $this->checkCmdOk($keyeq->getConfiguration('id'), 'unable', 'button', 'Désactiver partage avec ' . $keyeq->getName());
+        $this->checkCmdOk($keyeq->getConfiguration('id'), 'status', 'button', 'Statut partage avec ' . $keyeq->getName());
       }
     }
   }
