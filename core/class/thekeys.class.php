@@ -179,8 +179,7 @@ class thekeys extends eqLogic {
       return;
     }
     thekeys::authCloud();
-    $key = json_decode(config::byKey('shares_accessoire',  'thekeys'));
-    $url = 'partage/accessoire/activer/' . $key[$_id][$this->getConfiguration('id')]['id'];
+    $url = 'partage/accessoire/activer/' . $_id;
     $json = thekeys::callCloud($url);
     thekeys::checkShare();
   }
@@ -190,8 +189,7 @@ class thekeys extends eqLogic {
       return;
     }
     thekeys::authCloud();
-    $key = json_decode(config::byKey('shares_accessoire',  'thekeys'));
-    $url = 'partage/accessoire/desactiver/' . $key[$_id][$this->getConfiguration('id')]['id'];
+    $url = 'partage/accessoire/desactiver/' . $_id;
     $json = thekeys::callCloud($url);
     thekeys::checkShare();
   }
@@ -372,7 +370,7 @@ class thekeysCmd extends cmd {
       $gatewayid = $this->getConfiguration('gateway');
       $gateway = thekeys::byLogicalId($gatewayid, 'thekeys');
       $key = config::byKey('shares_accessoire','thekeys');
-      log::add('thekeys', 'debug', 'Config : ' . print_r(config::byKey('shares_accessoire','thekeys'),true));
+      //log::add('thekeys', 'debug', 'Config : ' . print_r(config::byKey('shares_accessoire','thekeys'),true));
       $code = $key[$gatewayid][$eqLogic->getConfiguration('id')]['code'];
       if (is_object($gateway)) {
         $gateway->callGateway($this->getConfiguration('value'),$eqLogic->getConfiguration('id_serrure'),$code);
@@ -390,11 +388,13 @@ class thekeysCmd extends cmd {
       break;
       default :
       $eqLogic = $this->getEqLogic();
+      $key = config::byKey('shares_accessoire','thekeys');
+      $id = $key[$this->getConfiguration('id')][$eqLogic->getConfiguration('id')]['id'];
       $locker = thekeys::byLogicalId($this->getConfiguration('id'), 'thekeys');
       if ($this->getConfiguration('value') == 'enable') {
-        $locker->activateShare($eqLogic->getLogicalId());
+        $locker->activateShare($id);
       } else {
-        $locker->unactivateShare($eqLogic->getLogicalId());
+        $locker->unactivateShare($id);
       }
       break;
     }
