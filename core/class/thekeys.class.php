@@ -392,9 +392,9 @@ class thekeysCmd extends cmd {
       $eqLogic = $this->getEqLogic();
       $locker = thekeys::byLogicalId($this->getConfiguration('id'), 'thekeys');
       if ($this->getConfiguration('value') == 'enable') {
-        $locker->activateShare($eqLogic->getId());
+        $locker->activateShare($eqLogic->getLogicalId());
       } else {
-        $locker->unactivateShare($eqLogic->getId());
+        $locker->unactivateShare($eqLogic->getLogicalId());
       }
       break;
     }
