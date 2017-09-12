@@ -189,7 +189,7 @@ class thekeys extends eqLogic {
       return;
     }
     thekeys::authCloud();
-    $url = 'partage/accessoire/desactiver/' . $_id;
+    $url = 'partage/desactiver/' . $_id;
     $json = thekeys::callCloud($url);
     thekeys::checkShare();
   }
