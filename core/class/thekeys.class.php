@@ -94,9 +94,9 @@ class thekeys extends eqLogic {
   public function cmdsShare() {
     foreach (eqLogic::byType('thekeys', true) as $keyeq) {
       if ($keyeq->getConfiguration('type') == 'locker') {
-        $this->checkCmdOk($keyeq->getConfiguration('id'), 'enable', 'button', 'Activer partage avec ' . $keyeq->getName());
-        $this->checkCmdOk($keyeq->getConfiguration('id'), 'unable', 'button', 'Désactiver partage avec ' . $keyeq->getName());
-        $this->checkCmdOk($keyeq->getConfiguration('id'), 'status', 'button', 'Statut partage avec ' . $keyeq->getName());
+        $this->checkCmdOk($keyeq->getLogicalId(), 'enable', 'button', 'Activer partage avec ' . $keyeq->getName());
+        $this->checkCmdOk($keyeq->getLogicalId(), 'unable', 'button', 'Désactiver partage avec ' . $keyeq->getName());
+        $this->checkCmdOk($keyeq->getLogicalId(), 'status', 'button', 'Statut partage avec ' . $keyeq->getName());
       }
     }
   }
@@ -132,12 +132,14 @@ class thekeys extends eqLogic {
             $accessoire[$share['accessoire']['id_accessoire']][$keyeq->getConfiguration('id')]['code'] = $share['code'];
             //on sauvegarde le statut si bouton/phone, si gateway on s'assure d'etre en actif
             $eqtest = thekeys::byLogicalId($share['accessoire']['id_accessoire'], 'thekeys');
-            if ($eqtest->getConfiguration('type') == 'gateway' && !$share['actif']) {
-              $keyeq->activateShare($share['accessoire']['id_accessoire']);
-            }
-            if ($eqtest->getConfiguration('type') == 'phone' || $eqtest->getConfiguration('type') == 'button') {
-              $value = ($share['actif']) ? 1:0;
-              $eqtest->checkAndUpdateCmd('status-'.$keyeq->getConfiguration('id'), $value);
+            if (is_object($eqtest)) {
+              if ($eqtest->getConfiguration('type') == 'gateway' && !$share['actif']) {
+                $keyeq->activateShare($share['accessoire']['id_accessoire']);
+              }
+              if ($eqtest->getConfiguration('type') == 'phone' || $eqtest->getConfiguration('type') == 'button') {
+                $value = ($share['actif']) ? 1:0;
+                $eqtest->checkAndUpdateCmd('status-'.$keyeq->getConfiguration('id'), $value);
+              }
             }
           }
         }
