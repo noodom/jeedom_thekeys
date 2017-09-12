@@ -195,13 +195,13 @@ class thekeys extends eqLogic {
   }
 
   public function postAjax() {
-    if (($this->getConfiguration('typeSelect') != $this->getConfiguration('type')) && $this->getConfiguration('type') != 'locker') {
+    if (($this->getConfiguration('type') != 'locker') {
       $this->setConfiguration('type',$this->getConfiguration('typeSelect'));
+      $this->setLogicalId($this->getConfiguration('idfield'));
       $this->save();
     }
     if ($this->getConfiguration('type') == 'gateway') {
       $this->loadCmdFromConf($this->getConfiguration('type'));
-      $this->setLogicalId($this->getConfiguration('idfield'));
       $this->save();
       $this->scanLockers();
       event::add('thekeys::found', array(
