@@ -203,7 +203,25 @@ class thekeys extends eqLogic {
     } else {
         $url = 'partage/create/' . $this->getConfiguration('id') . '/accessoire/' . $_id;
     }
-    $data = array('partage_accessoire[description]' => 'jeedom', 'partage_accessoire[nom]' => 'jeedom' . urlencode($_id), 'partage_accessoire[actif]' => 1);
+    $data = array('partage_accessoire[description]' => 'jeedom', 'partage_accessoire[nom]' => 'jeedom' . str_replace('+','',$_id), 'partage_accessoire[actif]' => 1);
+    if ($_digicode != '') {
+        $data['code'] = $_digicode;
+    }
+    $json = thekeys::callCloud($url,$data);
+    return $json;
+  }
+
+  public function editShare($_id, $_actif = true, $_phone = false) {
+    if (substr(config::byKey('username','thekeys'),0,1) != '+') {
+      return;
+    }
+    thekeys::authCloud();
+    if ($_phone) {
+        $url = 'partage/update/' . urlencode($_id);
+    } else {
+        $url = 'partage/accessoire/update/' . $_id;
+    }
+    $data = array('partage_accessoire[description]' => 'jeedom', 'partage_accessoire[nom]' => 'jeedom' . str_replace('+','',$_id), 'partage_accessoire[actif]' => $_actif);
     if ($_digicode != '') {
         $data['code'] = $_digicode;
     }
@@ -439,9 +457,9 @@ class thekeysCmd extends cmd {
       $phone = ($this->getConfiguration('category') == 'phone') ? true : false;
       log::add('thekeys', 'debug', 'Config : ' . $eqLogic->getLogicalId() . ' ' . $locker->getConfiguration('id') . ' ' . print_r(config::byKey('shares_accessoire','thekeys'),true));
       if ($this->getConfiguration('value') == 'enable') {
-        $locker->activateShare($id, $phone);
+        $locker->editShare($id, true, $phone);
       } else {
-        $locker->unactivateShare($id, $phone);
+        $locker->editShare($id, true, $phone);
       }
       break;
     }
