@@ -199,7 +199,7 @@ class thekeys extends eqLogic {
     }
     thekeys::authCloud();
     if ($_phone) {
-        $url = 'partage/create/' . $this->getConfiguration('id') . '/' . $_id;
+        $url = 'partage/create/' . $this->getConfiguration('id') . '/' . urlencode($_id),;
     } else {
         $url = 'partage/create/' . $this->getConfiguration('id') . '/accessoire/' . $_id;
     }
