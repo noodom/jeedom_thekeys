@@ -143,7 +143,6 @@ class thekeys extends eqLogic {
             }
           }
         }
-        log::add('thekeys', 'debug', 'Share trouvés : ' . print_r($accessoire,true));
         foreach ($accessoire as $id => $stuff) {
           //boucle pour vérifier si chaque gateway/bouton possède une entrée de partage avec l'équipement en cours, sinon on appelle le createShare et on ajoute le retour
           log::add('thekeys', 'debug', 'ID : ' . $id . ' ' . print_r($stuff,true));
@@ -156,9 +155,40 @@ class thekeys extends eqLogic {
             }
           }
         }
+        foreach ($json['data']['partages_utilisateur'] as $share) {
+          log::add('thekeys', 'debug', 'Partage serrure : ' . $share['accessoire']['id_accessoire'] . ' ' . $share['code']);
+          if (!(isset($share['date_debut']) || isset($share['date_fin']) || isset($share['heure_debut']) || isset($share['heure_fin']))) {
+            //on vérifier que c'est un partage permanent, jeedom ne prend pas en compte les autres
+            $phone[$share['accessoire']['id_accessoire']][$keyeq->getConfiguration('id')]['id'] = $share['id'];
+            $phone[$share['accessoire']['id_accessoire']][$keyeq->getConfiguration('id')]['code'] = $share['code'];
+            //on sauvegarde le statut si bouton/phone, si gateway on s'assure d'etre en actif
+            $eqtest = thekeys::byLogicalId($share['accessoire']['id_accessoire'], 'thekeys');
+            if (is_object($eqtest)) {
+              if ($eqtest->getConfiguration('type') == 'gateway' && !$share['actif']) {
+                $keyeq->activateShare($share['accessoire']['id_accessoire']);
+              }
+              if ($eqtest->getConfiguration('type') == 'phone' || $eqtest->getConfiguration('type') == 'button') {
+                $value = ($share['actif']) ? 1:0;
+                $eqtest->checkAndUpdateCmd('status-'.$keyeq->getConfiguration('id'), $value);
+              }
+            }
+          }
+        }
+        log::add('thekeys', 'debug', 'Phones trouvés : ' . print_r($phone,true));
+        foreach ($phone as $id => $stuff) {
+          //boucle pour vérifier si chaque gateway/bouton possède une entrée de partage avec l'équipement en cours, sinon on appelle le createShare et on ajoute le retour
+          log::add('thekeys', 'debug', 'ID : ' . $id . ' ' . print_r($stuff,true));
+          if (count($stuff) == 0) {
+            log::add('thekeys', 'debug', 'Create Share : ' . $id . ' ' . print_r($stuff,true));
+            $json = $keyeq->createShare($id,true);
+            if (isset($json['data']['code'])) {
+              $phone[$id]['id'] = $json['data']['id'];
+              $phone[$id]['code'] = $json['data']['code'];
+            }
+          }
+        }
       }
     }
-    log::add('thekeys', 'debug', 'Accessoire 2 : ' . print_r($accessoire,true));
     config::save('shares_accessoire', json_encode($accessoire),  'thekeys');
     config::save('shares_phone', json_encode($phone),  'thekeys');
   }
