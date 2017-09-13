@@ -203,7 +203,7 @@ class thekeys extends eqLogic {
     } else {
         $url = 'partage/create/' . $this->getConfiguration('id') . '/accessoire/' . $_id;
     }
-    $data = array('partage_accessoire[description]' => 'jeedom', 'partage_accessoire[nom]' => 'jeedom' . urlencode($_id), 'partage_accessoire[actif]' => 1);
+    $data = array('partage_accessoire[description]' => 'jeedom', 'partage_accessoire[nom]' => 'jeedom' . str_replace('+','',$_id), 'partage_accessoire[actif]' => 1);
     if ($_digicode != '') {
         $data['code'] = $_digicode;
     }
