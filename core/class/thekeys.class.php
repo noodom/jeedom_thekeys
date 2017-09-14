@@ -204,6 +204,7 @@ class thekeys extends eqLogic {
         $url = 'partage/create/' . $this->getConfiguration('id') . '/accessoire/' . $_id;
     }
     $data = array('partage_accessoire[description]' => 'jeedom', 'partage_accessoire[nom]' => 'jeedom' . str_replace('+','',$_id), 'partage_accessoire[actif]' => 1);
+<<<<<<< HEAD
     if ($_digicode != '') {
         $data['code'] = $_digicode;
     }
@@ -222,6 +223,8 @@ class thekeys extends eqLogic {
         $url = 'partage/accessoire/update/' . $_id;
     }
     $data = array('partage_accessoire[description]' => 'jeedom', 'partage_accessoire[nom]' => 'jeedom' . str_replace('+','',$_id), 'partage_accessoire[actif]' => $_actif);
+=======
+>>>>>>> 50fa87ae66f12d06c4ff1ae61cb26b755c7ed930
     if ($_digicode != '') {
         $data['code'] = $_digicode;
     }
