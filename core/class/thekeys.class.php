@@ -212,7 +212,7 @@ class thekeys extends eqLogic {
     return $json;
   }
 
-  public function editShare($_id, $_actif = true, $_phone = false, $_digicode = '') {
+  public function editShare($_id, $_actif = 'enable', $_phone = false, $_digicode = '') {
     if (substr(config::byKey('username','thekeys'),0,1) != '+') {
       return;
     }
@@ -222,7 +222,8 @@ class thekeys extends eqLogic {
     } else {
         $url = 'partage/accessoire/update/' . $_id;
     }
-    $data = array('partage_accessoire[actif]' => $_actif);
+    $value = ($_actif == 'enable') true : false;
+    $data = array('partage_accessoire[actif]' => $value);
     if ($_digicode != '') {
         $data['code'] = $_digicode;
     }
@@ -458,11 +459,7 @@ class thekeysCmd extends cmd {
       $id = $key[$eqLogic->getLogicalId()][$locker->getConfiguration('id')]['id'];
       $phone = ($this->getConfiguration('category') == 'phone') ? true : false;
       log::add('thekeys', 'debug', 'Config : ' . $eqLogic->getLogicalId() . ' ' . $locker->getConfiguration('id') . ' ' . print_r(config::byKey('shares_accessoire','thekeys'),true));
-      if ($this->getConfiguration('value') == 'enable') {
-        $locker->editShare($id, true, $phone);
-      } else {
-        $locker->editShare($id, false, $phone);
-      }
+      $locker->editShare($id, $this->getConfiguration('value'), $phone);
       break;
     }
   }
