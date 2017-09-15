@@ -227,7 +227,7 @@ class thekeys extends eqLogic {
     if ($_digicode != '') {
         $data['code'] = $_digicode;
     }
-    log::add('thekeys', 'debug', 'ID : ' . $_id . ' ' . $_actif);
+    log::add('thekeys', 'debug', 'ID : ' . $_id . ' ' . $_actif . ' ' . $value);
     $json = thekeys::callCloud($url,$data);
     return $json;
   }
