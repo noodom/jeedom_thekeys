@@ -223,10 +223,10 @@ class thekeys extends eqLogic {
     } else {
         $url = 'partage/accessoire/update/' . $_id;
     }
-    $value = ($_actif == 'enable') ? 1 : 0;
-    $data = array('partage[description]' => 'jeedom', 'partage[nom]' => 'jeedom' . str_replace('+','',$_eqId), 'partage[actif]' => $value);
+    $value = ($_actif == 'enable') ? true : false;
+    $data = array('partage_accessoire[nom]' => 'jeedom' . str_replace('+','',$_eqId), 'partage_accessoire[actif]' => $value);
     if ($_digicode != '') {
-        $data['partage[code]'] = $_digicode;
+        $data['partage_accessoire[code]'] = $_digicode;
     }
     log::add('thekeys', 'debug', 'ID : ' . $_id . ' ' . $_actif . ' ' . $value);
     $json = thekeys::callCloud($url,$data);
