@@ -449,10 +449,15 @@ class thekeysCmd extends cmd {
       break;
       default :
       $eqLogic = $this->getEqLogic();
-      $key = config::byKey('shares_accessoire','thekeys');
+      if ($this->getConfiguration('category') == 'phone') {
+          $key = config::byKey('shares_phone','thekeys');
+          $phone = true;
+      } else {
+          $key = config::byKey('shares_accessoire','thekeys');
+          $phone = false;
+      }
       $locker = thekeys::byLogicalId($this->getConfiguration('id'), 'thekeys');
       $id = $key[$eqLogic->getLogicalId()][$locker->getConfiguration('id')]['id'];
-      $phone = ($this->getConfiguration('category') == 'phone') ? true : false;
       log::add('thekeys', 'debug', 'Config : ' . $eqLogic->getLogicalId() . ' ' . $locker->getConfiguration('id') . ' ' . print_r(config::byKey('shares_accessoire','thekeys'),true));
       $locker->editShare($id, $eqLogic->getLogicalId(), $this->getConfiguration('value'), $phone);
       thekeys::updateUser();
