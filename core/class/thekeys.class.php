@@ -222,7 +222,7 @@ class thekeys extends eqLogic {
     } else {
         $url = 'partage/accessoire/update/' . $_id;
     }
-    $value = ($_actif == 'enable') ? true : false;
+    $value = ($_actif == 'enable') ? 1 : 0;
     $data = array('partage_accessoire[description]' => 'jeedom', 'partage_accessoire[nom]' => 'jeedom' . str_replace('+','',$_eqId), 'partage_accessoire[actif]' => $value);
     if ($_digicode != '') {
         $data['code'] = $_digicode;
