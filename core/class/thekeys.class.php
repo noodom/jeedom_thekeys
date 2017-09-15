@@ -216,7 +216,7 @@ class thekeys extends eqLogic {
         $url = 'partage/update/' . urlencode($_id);
         $data = array('partage[nom]' => 'jeedom' . str_replace('+','',$_id));
         if ($_actif == 'enable') {
-            $data['partage_accessoire[actif]'] = 1;
+            $data['partage[actif]'] = 1;
         }
     } else {
         $url = 'partage/accessoire/update/' . $_id;
