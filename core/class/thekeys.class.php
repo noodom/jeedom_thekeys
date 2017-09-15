@@ -212,7 +212,7 @@ class thekeys extends eqLogic {
     return $json;
   }
 
-  public function editShare($_id, $_actif = true, $_phone = false) {
+  public function editShare($_id, $_actif = true, $_phone = false, $_digicode = '') {
     if (substr(config::byKey('username','thekeys'),0,1) != '+') {
       return;
     }
@@ -226,6 +226,7 @@ class thekeys extends eqLogic {
     if ($_digicode != '') {
         $data['code'] = $_digicode;
     }
+    log::add('thekeys', 'debug', 'ID : ' . $_id . ' ' . $_actif);
     $json = thekeys::callCloud($url,$data);
     return $json;
   }
@@ -458,9 +459,9 @@ class thekeysCmd extends cmd {
       $phone = ($this->getConfiguration('category') == 'phone') ? true : false;
       log::add('thekeys', 'debug', 'Config : ' . $eqLogic->getLogicalId() . ' ' . $locker->getConfiguration('id') . ' ' . print_r(config::byKey('shares_accessoire','thekeys'),true));
       if ($this->getConfiguration('value') == 'enable') {
-        $locker->editShare($id, 1, $phone);
+        $locker->editShare($id, true, $phone);
       } else {
-        $locker->editShare($id, 0, $phone);
+        $locker->editShare($id, false, $phone);
       }
       break;
     }
