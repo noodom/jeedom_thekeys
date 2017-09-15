@@ -159,19 +159,14 @@ class thekeys extends eqLogic {
           log::add('thekeys', 'debug', 'Partage serrure : ' . $share['accessoire']['id_accessoire'] . ' ' . $share['code']);
           if (!(isset($share['date_debut']) || isset($share['date_fin']) || isset($share['heure_debut']) || isset($share['heure_fin']))) {
             //on vérifier que c'est un partage permanent, jeedom ne prend pas en compte les autres
-            $phone[$share['accessoire']['id_accessoire']][$keyeq->getConfiguration('id')]['id'] = $share['id'];
-            $phone[$share['accessoire']['id_accessoire']][$keyeq->getConfiguration('id')]['code'] = $share['code'];
+            $phone[$share['utilisateur']['username']][$keyeq->getConfiguration('id')]['id'] = $share['id'];
+            $phone[$share['utilisateur']['username']][$keyeq->getConfiguration('id')]['code'] = $share['code'];
             //on sauvegarde le statut si bouton/phone, si gateway on s'assure d'etre en actif
-            $eqtest = thekeys::byLogicalId($share['accessoire']['id_accessoire'], 'thekeys');
+            $eqtest = thekeys::byLogicalId($share['utilisateur']['username'], 'thekeys');
             if (is_object($eqtest)) {
-              if ($eqtest->getConfiguration('type') == 'gateway' && !$share['actif']) {
-                $keyeq->activateShare($share['accessoire']['id_accessoire']);
-              }
-              if ($eqtest->getConfiguration('type') == 'phone' || $eqtest->getConfiguration('type') == 'button') {
                 $value = ($share['actif']) ? 1:0;
                 $eqtest->checkAndUpdateCmd('status-'.$keyeq->getConfiguration('id'), $value);
-                log::add('thekeys', 'debug', 'Partage serrure : ' . $share['accessoire']['id_accessoire']. 'status-'.$keyeq->getConfiguration('id') . ' ' . $value);
-              }
+                log::add('thekeys', 'debug', 'Partage serrure : ' . $share['utilisateur']['username']. 'status-'.$keyeq->getConfiguration('id') . ' ' . $value);
             }
           }
         }
@@ -223,8 +218,8 @@ class thekeys extends eqLogic {
     } else {
         $url = 'partage/accessoire/update/' . $_id;
     }
-    $value = ($_actif == 'enable') ? true : false;
-    $data = array('partage_accessoire[nom]' => 'jeedom' . str_replace('+','',$_eqId), 'partage_accessoire[actif]' => $value);
+    $value = ($_actif == 'enable') ? 1 : 0;
+    $data = array('partage_accessoire[nom]' => 'jeedom' . str_replace('+','',$_eqId), 'partage_accessoire[actif]' => $value, 'partage[actif]' => $value);
     if ($_digicode != '') {
         $data['partage_accessoire[code]'] = $_digicode;
     }
@@ -461,6 +456,8 @@ class thekeysCmd extends cmd {
       $phone = ($this->getConfiguration('category') == 'phone') ? true : false;
       log::add('thekeys', 'debug', 'Config : ' . $eqLogic->getLogicalId() . ' ' . $locker->getConfiguration('id') . ' ' . print_r(config::byKey('shares_accessoire','thekeys'),true));
       $locker->editShare($id, $eqLogic->getLogicalId(), $this->getConfiguration('value'), $phone);
+      thekeys::updateUser();
+      thekeys::checkShare();
       /*if ($this->getConfiguration('value') == 'enable') {
           $locker->activateShare($id,$phone);
       } else {
