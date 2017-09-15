@@ -138,7 +138,7 @@ class thekeys extends eqLogic {
               }
               if ($eqtest->getConfiguration('type') == 'phone' || $eqtest->getConfiguration('type') == 'button') {
                 $value = ($share['actif']) ? 1:0;
-                $eqtest->checkAndUpdateCmd('status-'.$keyeq->getConfiguration('id'), $value);
+                $eqtest->checkAndUpdateCmd('status-'.$share['accessoire']['id_accessoire'], $value);
               }
             }
           }
