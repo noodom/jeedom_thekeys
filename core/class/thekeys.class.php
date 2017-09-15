@@ -134,7 +134,7 @@ class thekeys extends eqLogic {
             $eqtest = thekeys::byLogicalId($share['accessoire']['id_accessoire'], 'thekeys');
             if (is_object($eqtest)) {
               if ($eqtest->getConfiguration('type') == 'gateway' && !$share['actif']) {
-                $keyeq->activateShare($share['accessoire']['id_accessoire']);
+                $keyeq->editShare($share['id'], $share['accessoire']['id_accessoire']);
               }
               if ($eqtest->getConfiguration('type') == 'phone' || $eqtest->getConfiguration('type') == 'button') {
                 $value = ($share['actif']) ? 1:0;
@@ -212,13 +212,18 @@ class thekeys extends eqLogic {
       return;
     }
     thekeys::authCloud();
-    $value = ($_actif == 'enable') ? 1 : 0;
     if ($_phone) {
         $url = 'partage/update/' . urlencode($_id);
-        $data = array('partage[nom]' => 'jeedom' . str_replace('+','',$_id), 'partage[actif]' => $value);
+        $data = array('partage[nom]' => 'jeedom' . str_replace('+','',$_id));
+        if ($_actif == 'enable') {
+            $data['partage_accessoire[actif]'] = 1;
+        }
     } else {
         $url = 'partage/accessoire/update/' . $_id;
-        $data = array('partage_accessoire[nom]' => 'jeedom' . str_replace('+','',$_eqId), 'partage_accessoire[actif]' => $value, 'partage[actif]' => $value);
+        $data = array('partage_accessoire[nom]' => 'jeedom' . str_replace('+','',$_eqId));
+        if ($_actif == 'enable') {
+            $data['partage_accessoire[actif]'] = 1;
+        }
     }
     if ($_digicode != '') {
         $data['partage_accessoire[code]'] = $_digicode;
@@ -226,34 +231,6 @@ class thekeys extends eqLogic {
     log::add('thekeys', 'debug', 'ID : ' . $_id . ' ' . $_actif . ' ' . $value);
     $json = thekeys::callCloud($url,$data);
     return $json;
-  }
-
-  public function activateShare($_id, $_phone = false) {
-    if (substr(config::byKey('username','thekeys'),0,1) != '+') {
-      return;
-    }
-    thekeys::authCloud();
-    if ($_phone) {
-        $url = 'partage/activer/' . $_id;
-    } else {
-        $url = 'partage/accessoire/activer/' . $_id;
-    }
-    $json = thekeys::callCloud($url);
-    thekeys::checkShare();
-  }
-
-  public function unactivateShare($_id, $_phone = false) {
-    if (substr(config::byKey('username','thekeys'),0,1) != '+') {
-      return;
-    }
-    thekeys::authCloud();
-    if ($_phone) {
-        $url = 'partage/desactiver/' . $_id;
-    } else {
-        $url = 'partage/accessoire/desactiver/' . $_id;
-    }
-    $json = thekeys::callCloud($url);
-    thekeys::checkShare();
   }
 
   public function postAjax() {
@@ -463,11 +440,6 @@ class thekeysCmd extends cmd {
       $locker->editShare($id, $eqLogic->getLogicalId(), $this->getConfiguration('value'), $phone);
       thekeys::updateUser();
       thekeys::checkShare();
-      /*if ($this->getConfiguration('value') == 'enable') {
-          $locker->activateShare($id,$phone);
-      } else {
-          $locker->unactivateShare($id,$phone);
-      }*/
       break;
     }
   }
