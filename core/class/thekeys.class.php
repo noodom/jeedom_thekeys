@@ -212,13 +212,14 @@ class thekeys extends eqLogic {
       return;
     }
     thekeys::authCloud();
+    $value = ($_actif == 'enable') ? 1 : 0;
     if ($_phone) {
         $url = 'partage/update/' . urlencode($_id);
+        $data = array('partage[nom]' => 'jeedom' . str_replace('+','',$_id), 'partage[actif]' => 1);
     } else {
         $url = 'partage/accessoire/update/' . $_id;
-    }
-    $value = ($_actif == 'enable') ? 1 : 0;
-    $data = array('partage_accessoire[nom]' => 'jeedom' . str_replace('+','',$_eqId), 'partage_accessoire[actif]' => $value, 'partage[actif]' => $value);
+        $data = array('partage_accessoire[nom]' => 'jeedom' . str_replace('+','',$_eqId), 'partage_accessoire[actif]' => $value, 'partage[actif]' => $value);
+    }    
     if ($_digicode != '') {
         $data['partage_accessoire[code]'] = $_digicode;
     }
