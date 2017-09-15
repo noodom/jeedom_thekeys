@@ -170,6 +170,7 @@ class thekeys extends eqLogic {
               if ($eqtest->getConfiguration('type') == 'phone' || $eqtest->getConfiguration('type') == 'button') {
                 $value = ($share['actif']) ? 1:0;
                 $eqtest->checkAndUpdateCmd('status-'.$keyeq->getConfiguration('id'), $value);
+                log::add('thekeys', 'debug', 'Partage serrure : ' . $share['accessoire']['id_accessoire']. 'status-'.$keyeq->getConfiguration('id') . ' ' . $value);
               }
             }
           }
@@ -457,9 +458,9 @@ class thekeysCmd extends cmd {
       $phone = ($this->getConfiguration('category') == 'phone') ? true : false;
       log::add('thekeys', 'debug', 'Config : ' . $eqLogic->getLogicalId() . ' ' . $locker->getConfiguration('id') . ' ' . print_r(config::byKey('shares_accessoire','thekeys'),true));
       if ($this->getConfiguration('value') == 'enable') {
-        $locker->editShare($id, true, $phone);
+        $locker->editShare($id, 1, $phone);
       } else {
-        $locker->editShare($id, false, $phone);
+        $locker->editShare($id, 0, $phone);
       }
       break;
     }
