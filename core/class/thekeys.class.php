@@ -156,12 +156,11 @@ class thekeys extends eqLogic {
           }
         }
         foreach ($json['data']['partages_utilisateur'] as $share) {
-          log::add('thekeys', 'debug', 'Partage serrure : ' . $share['accessoire']['id_accessoire'] . ' ' . $share['code']);
+          log::add('thekeys', 'debug', 'Partage serrure : ' . $share['utilisateur']['username']);
           if (!(isset($share['date_debut']) || isset($share['date_fin']) || isset($share['heure_debut']) || isset($share['heure_fin']))) {
             //on vérifier que c'est un partage permanent, jeedom ne prend pas en compte les autres
             $phone[$share['utilisateur']['username']][$keyeq->getConfiguration('id')]['id'] = $share['id'];
-            $phone[$share['utilisateur']['username']][$keyeq->getConfiguration('id')]['code'] = $share['code'];
-            //on sauvegarde le statut si bouton/phone, si gateway on s'assure d'etre en actif
+            //$phone[$share['utilisateur']['username']][$keyeq->getConfiguration('id')]['code'] = $share['code'];
             $eqtest = thekeys::byLogicalId($share['utilisateur']['username'], 'thekeys');
             if (is_object($eqtest)) {
                 $value = ($share['actif']) ? 1:0;
