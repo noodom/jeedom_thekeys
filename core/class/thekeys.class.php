@@ -164,7 +164,7 @@ class thekeys extends eqLogic {
             $eqtest = thekeys::byLogicalId($share['utilisateur']['username'], 'thekeys');
             if (is_object($eqtest)) {
                 $value = ($share['actif']) ? 1:0;
-                $eqtest->checkAndUpdateCmd('status-'.$keyeq->getConfiguration('id'), $value);
+                $eqtest->checkAndUpdateCmd('status-'.$keyeq->getLogicalId(), $value);
                 log::add('thekeys', 'debug', 'Partage serrure : ' . $share['utilisateur']['username']. 'status-'.$keyeq->getConfiguration('id') . ' ' . $value);
             }
           }
@@ -219,7 +219,7 @@ class thekeys extends eqLogic {
     } else {
         $url = 'partage/accessoire/update/' . $_id;
         $data = array('partage_accessoire[nom]' => 'jeedom' . str_replace('+','',$_eqId), 'partage_accessoire[actif]' => $value, 'partage[actif]' => $value);
-    }    
+    }
     if ($_digicode != '') {
         $data['partage_accessoire[code]'] = $_digicode;
     }
