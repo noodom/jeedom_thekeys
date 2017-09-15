@@ -224,7 +224,7 @@ class thekeys extends eqLogic {
         if ($_actif == 'enable') {
             $data['partage_accessoire[actif]'] = 1;
         }
-    }
+    } 
     if ($_digicode != '') {
         $data['partage_accessoire[code]'] = $_digicode;
     }
