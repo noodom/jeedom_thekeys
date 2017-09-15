@@ -212,7 +212,7 @@ class thekeys extends eqLogic {
     return $json;
   }
 
-  public function editShare($_id, ,$_eqId, $_actif = 'enable', $_phone = false, $_digicode = '') {
+  public function editShare($_id, $_eqId, $_actif = 'enable', $_phone = false, $_digicode = '') {
     if (substr(config::byKey('username','thekeys'),0,1) != '+') {
       return;
     }
