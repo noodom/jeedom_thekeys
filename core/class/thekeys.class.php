@@ -224,11 +224,11 @@ class thekeys extends eqLogic {
         if ($_actif == 'enable') {
             $data['partage_accessoire[actif]'] = 1;
         }
-    } 
+    }
     if ($_digicode != '') {
         $data['partage_accessoire[code]'] = $_digicode;
     }
-    log::add('thekeys', 'debug', 'ID : ' . $_id . ' ' . $_actif . ' ' . $value);
+    log::add('thekeys', 'debug', 'ID : ' . $_id . ' ' . $_actif . ' ' . print_r($data,true));
     $json = thekeys::callCloud($url,$data);
     return $json;
   }
