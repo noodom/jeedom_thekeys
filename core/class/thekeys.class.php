@@ -221,7 +221,7 @@ class thekeys extends eqLogic {
     } else {
         $url = 'partage/accessoire/update/' . $_id;
     }
-    $data = array('partage_accessoire[description]' => 'jeedom', 'partage_accessoire[nom]' => 'jeedom' . str_replace('+','',$_id), 'partage_accessoire[actif]' => $_actif);
+    $data = array('partage_accessoire[actif]' => $_actif);
     if ($_digicode != '') {
         $data['code'] = $_digicode;
     }
@@ -459,7 +459,7 @@ class thekeysCmd extends cmd {
       if ($this->getConfiguration('value') == 'enable') {
         $locker->editShare($id, true, $phone);
       } else {
-        $locker->editShare($id, true, $phone);
+        $locker->editShare($id, false, $phone);
       }
       break;
     }
