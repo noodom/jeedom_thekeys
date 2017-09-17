@@ -48,7 +48,7 @@ $eqLogics = eqLogic::byType('thekeys');
         echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;' . $opacity . '" >';
         echo "<center>";
         if (file_exists(dirname(__FILE__) . '/../../core/config/devices/' . $eqLogic->getConfiguration('model') . '/' . $eqLogic->getConfiguration('model') . '.png')) {
-          echo '<img src="plugins/thekeys/doc/images/' . $eqLogic->getConfiguration('type') . '_ion.png' . '" height="105" width="95" />';
+          echo '<img src="plugins/thekeys/doc/images/' . $eqLogic->getConfiguration('type') . '_icon.png' . '" height="105" width="95" />';
         } else {
           echo '<img src="plugins/thekeys/doc/images/thekeys_icon.png" height="105" width="95" />';
         }
