@@ -156,7 +156,7 @@ class thekeys extends eqLogic {
                                 $eqtest->setIsEnable(1);
                                 $eqtest->setConfiguration('type', 'digicode');
                                 $eqtest->setConfiguration('id_share', $share['id']);
-                                $eqtest->setConfiguration('id_serrure', $keyeq->getConfiguration('id'));
+                                $eqtest->setConfiguration('id_serrure', $keyeq->getLogicalId());
                                 $eqtest->setConfiguration('id', $share['accessoire']['id_accessoire']);
                                 $eqtest->setConfiguration('code', $share['code']);
                                 $eqtest->save();
@@ -166,7 +166,7 @@ class thekeys extends eqLogic {
                             }
                             log::add('thekeys', 'debug', 'Digicode');
                             $value = ($share['actif']) ? 1:0;
-                            $eqtest->checkAndUpdateCmd('status-'.$share['id'], $value);
+                            $eqtest->checkAndUpdateCmd('status'.$share['id'], $value);
                         }
                     }
                 }
