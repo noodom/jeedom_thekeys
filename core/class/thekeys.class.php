@@ -65,6 +65,9 @@ class thekeys extends eqLogic {
   }
 
   public function scanLockers() {
+      if ($this->pingHost() == false) {
+          log::add('thekeys', 'debug', 'Erreur de connexion gateway');
+      }
     $idgateway = $this->getConfiguration('idfield');
     $url = 'http://' . $this->getConfiguration('ipfield') . '/lockers';
     $request_http = new com_http($url);
