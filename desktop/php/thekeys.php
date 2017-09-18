@@ -173,7 +173,6 @@ $eqLogics = eqLogic::byType('thekeys');
               <th style="width: 50px;">#</th>
               <th style="width: 300px;">{{Nom}}</th>
               <th style="width: 160px;">{{Type}}</th>
-              <th style="width: 200px;">{{Valeur}}</th>
               <th style="width: 100px;">{{Options}}</th>
               <th style="width: 100px;"></th>
             </tr>
