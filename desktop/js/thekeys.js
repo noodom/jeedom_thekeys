@@ -27,7 +27,10 @@ function printEqLogic(_eqLogic){
   if (_eqLogic.configuration.type == 'locker') {
     $('#locker').show();
     $('#others').hide();
-  } else {
+} else if (_eqLogic.configuration.type == 'digicode') {
+  $('#locker').hide();
+  $('#others').hide();
+} else {
     $('#locker').hide();
     $('#others').show();
   }

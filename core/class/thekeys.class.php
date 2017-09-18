@@ -144,8 +144,10 @@ class thekeys extends eqLogic {
                                 $value = ($share['actif']) ? 1:0;
                                 $eqtest->checkAndUpdateCmd('status-'.$keyeq->getLogicalId(), $value);
                             }
-                        } else {
-                            if ($share['accessoire']['type'] == 2) {
+                        }
+                        if ($share['accessoire']['type'] == 2) {
+                            $eqtest = thekeys::byLogicalId($share['accessoire']['id_accessoire'] . '-' . $share['id'], 'thekeys');
+                            if (!is_object($eqtest)) {
                                 log::add('thekeys', 'debug', 'Digicode trouvé');
                                 $eqtest = new thekeys();
                                 $eqtest->setEqType_name('thekeys');
@@ -162,8 +164,6 @@ class thekeys extends eqLogic {
                                 $eqtest->checkCmdOk($share['id'], 'unable', 'digicode', 'Désactiver');
                                 $eqtest->checkCmdOk($share['id'], 'status', 'digicode', 'Statut');
                             }
-                        }
-                        if ($share['accessoire']['type'] == 2) {
                             log::add('thekeys', 'debug', 'Digicode');
                             $value = ($share['actif']) ? 1:0;
                             $eqtest->checkAndUpdateCmd('status-'.$share['id'], $value);
