@@ -158,9 +158,9 @@ class thekeys extends eqLogic {
                                 $eqtest->setConfiguration('id', $share['accessoire']['id_accessoire']);
                                 $eqtest->setConfiguration('code', $share['code']);
                                 $eqtest->save();
-                                $this->checkCmdOk($share['id'], 'enable', 'digicode', 'Activer');
-                                $this->checkCmdOk($share['id'], 'unable', 'digicode', 'Désactiver');
-                                $this->checkCmdOk($share['id'], 'status', 'digicode', 'Statut');
+                                $eqtest->checkCmdOk($share['id'], 'enable', 'digicode', 'Activer');
+                                $eqtest->checkCmdOk($share['id'], 'unable', 'digicode', 'Désactiver');
+                                $eqtest->checkCmdOk($share['id'], 'status', 'digicode', 'Statut');
                             }
                         }
                         if ($share['accessoire']['type'] == 2) {
