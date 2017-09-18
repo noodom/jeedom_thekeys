@@ -325,7 +325,7 @@ class thekeys extends eqLogic {
   }
 
   public function pingHost ($_timeout = 1) {
-    exec(system::getCmdSudo() . "ping -c1 " . $this->getConfiguration('ipfield'), $output, $return_var);
+    exec(system::getCmdSudo() . "echo > /dev/tcp/" . $this->getConfiguration('ipfield') . '/80) >/dev/null 2>&1 && echo 0 || echo 1', $output, $return_var);
     if ($return_var == 0) {
         $result = true;
         $this->checkAndUpdateCmd('online', 1);
