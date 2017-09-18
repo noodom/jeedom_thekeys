@@ -12,6 +12,18 @@
 				"category": "gateway"
             },
             "logicalId": "refresh"
+        },
+        {
+            "name": "Online",
+            "type": "info",
+            "subtype": "binary",
+            "display": {
+				"generic_type": "DONT"
+            },
+            "configuration": {
+				"category": "gateway"
+            },
+            "logicalId": "online"
         }
     ]
 }

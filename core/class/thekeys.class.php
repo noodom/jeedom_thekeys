@@ -320,7 +320,22 @@ class thekeys extends eqLogic {
     thekeys::checkShare();
   }
 
+  public function pingHost ($_timeout = 1) {
+    exec(system::getCmdSudo() . "ping -c1 " . $this->getConfiguration('ipfield'), $output, $return_var);
+    if ($return_var == 0) {
+        $result = true;
+        $this->checkAndUpdateCmd('online', 1);
+    } else {
+        $result = false;
+        $this->checkAndUpdateCmd('online', 0);
+    }
+    return $result;
+}
+
   public function callGateway($uri,$id = '', $code = '') {
+      if ($this->pingHost() == false) {
+          log::add('thekeys', 'debug', 'Erreur de connexion gateway');
+      }
     $url = 'http://' . $this->getConfiguration('ipfield') . '/' . $uri;
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL,$url);
