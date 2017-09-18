@@ -333,6 +333,7 @@ class thekeys extends eqLogic {
             $result = false;
             $this->checkAndUpdateCmd('online', 0);
         }
+        log::add('thekeys', 'debug', 'Ping result ' . $output);
         return $result;
     }
 
