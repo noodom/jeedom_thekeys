@@ -144,6 +144,29 @@ class thekeys extends eqLogic {
                                 $value = ($share['actif']) ? 1:0;
                                 $eqtest->checkAndUpdateCmd('status-'.$keyeq->getLogicalId(), $value);
                             }
+                        } else {
+                            if ($share['accessoire']['type'] == 2) {
+                                log::add('thekeys', 'debug', 'Digicode trouvé');
+                                $eqtest = new thekeys();
+                                $eqtest->setEqType_name('thekeys');
+                                $eqtest->setLogicalId($share['accessoire']['id_accessoire'] . '-' . $share['id']);
+                                $eqtest->setName('Digicode ' . $share['code']);
+                                $eqtest->setIsEnable(1);
+                                $eqtest->setConfiguration('type', 'digicode');
+                                $eqtest->setConfiguration('id_share', $share['id']);
+                                $eqtest->setConfiguration('id_serrure', $keyeq->getConfiguration('id'));
+                                $eqtest->setConfiguration('id', $share['accessoire']['id_accessoire']);
+                                $eqtest->setConfiguration('code', $share['code']);
+                                $eqtest->save();
+                                $this->checkCmdOk($share['id'], 'enable', 'digicode', 'Activer');
+                                $this->checkCmdOk($share['id'], 'unable', 'digicode', 'Désactiver');
+                                $this->checkCmdOk($share['id'], 'status', 'digicode', 'Statut');
+                            }
+                        }
+                        if ($share['accessoire']['type'] == 2) {
+                            log::add('thekeys', 'debug', 'Digicode');
+                            $value = ($share['actif']) ? 1:0;
+                            $eqtest->checkAndUpdateCmd('status-'.$share['id'], $value);
                         }
                     }
                 }
@@ -445,6 +468,13 @@ class thekeysCmd extends cmd {
             thekeys::updateUser();
             thekeys::checkShare();
             $eqLogic->scanLockers();
+            break;
+            case 'digicode' :
+            $eqLogic = $this->getEqLogic();
+            $locker = thekeys::byLogicalId($eqLogic->getConfiguration('id_serrure'), 'thekeys');
+            $locker->editShare($eqLogic->getConfiguration('id_share'), $eqLogic->getConfiguration('id') . '-' . $eqLogic->getConfiguration('code'), $this->getConfiguration('value'), false);
+            thekeys::updateUser();
+            thekeys::checkShare();
             break;
             default :
             $eqLogic = $this->getEqLogic();
