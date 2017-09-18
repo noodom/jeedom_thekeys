@@ -166,7 +166,7 @@ class thekeys extends eqLogic {
                             }
                             log::add('thekeys', 'debug', 'Digicode');
                             $value = ($share['actif']) ? 1:0;
-                            $eqtest->checkAndUpdateCmd('status'.$share['id'], $value);
+                            $eqtest->checkAndUpdateCmd('status-'.$share['id'], $value);
                         }
                     }
                 }
