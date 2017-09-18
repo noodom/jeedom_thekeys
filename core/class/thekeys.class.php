@@ -65,7 +65,7 @@ class thekeys extends eqLogic {
   }
 
   public function scanLockers() {
-      if ($this->pingHost() == false) {
+      if (!$this->pingHost()) {
           log::add('thekeys', 'debug', 'Erreur de connexion gateway');
           return;
       }
@@ -337,7 +337,7 @@ class thekeys extends eqLogic {
 }
 
   public function callGateway($uri,$id = '', $code = '') {
-      if ($this->pingHost() == false) {
+      if (!$this->pingHost()) {
           log::add('thekeys', 'debug', 'Erreur de connexion gateway');
           return;
       }
