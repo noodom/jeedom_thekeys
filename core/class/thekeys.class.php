@@ -145,7 +145,7 @@ class thekeys extends eqLogic {
                                 $eqtest->checkAndUpdateCmd('status-'.$keyeq->getLogicalId(), $value);
                             }
                         }
-                        if ($share['accessoire']['type'] == 2) {
+                        if ($share['accessoire']['type'] == '2') {
                             $eqtest = thekeys::byLogicalId($share['accessoire']['id_accessoire'] . '-' . $share['id'], 'thekeys');
                             if (!is_object($eqtest)) {
                                 log::add('thekeys', 'debug', 'Digicode trouvé');
