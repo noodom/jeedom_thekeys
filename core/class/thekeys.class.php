@@ -164,7 +164,7 @@ class thekeys extends eqLogic {
                                 $eqtest->checkCmdOk($share['id'], 'unable', 'digicode', 'Désactiver');
                                 $eqtest->checkCmdOk($share['id'], 'status', 'digicode', 'Statut');
                             }
-                            log::add('thekeys', 'debug', 'Digicode');
+                            log::add('thekeys', 'debug', 'Digicode satus : ' . $share['actif']);
                             $value = ($share['actif']) ? 1:0;
                             $eqtest->checkAndUpdateCmd('status-'.$share['id'], $value);
                         }
