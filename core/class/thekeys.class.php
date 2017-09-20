@@ -61,7 +61,7 @@ class thekeys extends eqLogic {
             $thekeys->checkAndUpdateCmd('status',$value);
             $thekeys->checkAndUpdateCmd('battery',$key['battery']/1000);
             $thekeys->batteryStatus($key['battery']/40);
-            og::add('thekeys', 'debug', 'Serrure ' . $key['nom'] . ' statut ' . $value . ' batterie ' . $key['battery']);
+            log::add('thekeys', 'debug', 'Serrure ' . $key['nom'] . ' statut ' . $value . ' batterie ' . $key['battery']);
         }
     }
 
