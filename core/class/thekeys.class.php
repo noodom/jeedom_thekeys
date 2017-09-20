@@ -367,6 +367,7 @@ class thekeys extends eqLogic {
             return;
         }
         $url = 'http://' . $this->getConfiguration('ipfield') . '/' . $uri;
+        log::add('thekeys', 'debug', 'URL : ' . $url);
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL,$url);
         curl_setopt($curl, CURLOPT_POST, 1);
