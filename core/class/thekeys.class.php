@@ -35,7 +35,7 @@ class thekeys extends eqLogic {
                 $thekeys = new thekeys();
                 $thekeys->setEqType_name('thekeys');
                 $thekeys->setLogicalId($key['id_serrure']);
-                $thekeys->setName('Serrure ' . $key['id_serrure']);
+                $thekeys->setName('Serrure ' . $key['nom']);
                 $thekeys->setIsEnable(1);
                 $thekeys->setConfiguration('type', 'locker');
                 $thekeys->setConfiguration('id', $key['id']);
@@ -152,7 +152,7 @@ class thekeys extends eqLogic {
                                 $eqtest = new thekeys();
                                 $eqtest->setEqType_name('thekeys');
                                 $eqtest->setLogicalId($share['accessoire']['id_accessoire'] . '-' . $share['id']);
-                                $eqtest->setName('Digicode ' . $share['code']);
+                                $eqtest->setName('Digicode sur ' . $share['accessoire']['nom'] . ' avec ' . $share['code']);
                                 $eqtest->setIsEnable(1);
                                 $eqtest->setConfiguration('type', 'digicode');
                                 $eqtest->setConfiguration('id_share', $share['id']);
