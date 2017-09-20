@@ -61,6 +61,7 @@ class thekeys extends eqLogic {
             $thekeys->checkAndUpdateCmd('status',$value);
             $thekeys->checkAndUpdateCmd('battery',$key['battery']/1000);
             $thekeys->batteryStatus($key['battery']/40);
+            og::add('thekeys', 'debug', 'Serrure ' . $key['nom'] . ' statut ' . $value . ' batterie ' . $key['battery']);
         }
     }
 
@@ -85,7 +86,7 @@ class thekeys extends eqLogic {
                 $thekeys->checkCmdOk($idgateway, 'open', 'locker', 'Déverrouillage avec ' . $this->getName());
                 $thekeys->checkCmdOk($idgateway, 'close', 'locker', 'Verrouillage avec ' . $this->getName());
                 $thekeys->checkAndUpdateCmd('battery',$device['battery']/1000);
-                $thekeys->batteryStatus($device['battery']/40);;
+                $thekeys->batteryStatus($device['battery']/40);
                 log::add('thekeys', 'debug', 'Rafraichissement serrure : ' . $device['identifier'] . ' ' . $device['battery'] . ' ' . $device['rssi']);
             }
         }
@@ -356,7 +357,7 @@ class thekeys extends eqLogic {
             $result = false;
             $this->checkAndUpdateCmd('online', 0);
         }
-        log::add('thekeys', 'debug', 'Ping result ' . $output);
+        log::add('thekeys', 'debug', 'Ping result ' . $output[0]);
         return $result;
     }
 
