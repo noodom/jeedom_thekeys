@@ -360,7 +360,7 @@ class thekeys extends eqLogic {
             $result = false;
             $this->checkAndUpdateCmd('online', 0);
         }
-        log::add('thekeys', 'debug', 'Ping result ' . $output[0]);
+        log::add('thekeys', 'debug', 'Ping result ' . $this->getConfiguration('ipfield') . ' ' . $output[0]);
         return $result;
     }
 
