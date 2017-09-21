@@ -349,7 +349,7 @@ class thekeys extends eqLogic {
     }
 
     public function pingHost () {
-        exec('echo > /dev/tcp/' . $this->getConfiguration('ipfield') . '/80) >/dev/null 2>&1 && echo 0 || echo 1', $output, $return_var);
+        exec('echo > /dev/tcp/' . $this->getConfiguration('ipfield') . '/80 >/dev/null 2>&1 && echo 0 || echo 1', $output, $return_var);
         if ($output[0] == 0) {
             $result = true;
             $this->checkAndUpdateCmd('online', 1);
