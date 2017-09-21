@@ -352,7 +352,8 @@ class thekeys extends eqLogic {
     }
 
     public function pingHost () {
-        exec('(echo > /dev/tcp/' . $this->getConfiguration('ipfield') . '/80) >/dev/null 2>&1 && echo 0 || echo 1', $output, $return_var);
+      $cmd = '(echo > /dev/tcp/' . $this->getConfiguration('ipfield') . '/80) >/dev/null 2>&1 && echo 0 || echo 1';
+        exec($cmd, $output, $return_var);
         if ($output[0] == 0) {
             $result = true;
             $this->checkAndUpdateCmd('online', 1);
@@ -360,7 +361,7 @@ class thekeys extends eqLogic {
             $result = false;
             $this->checkAndUpdateCmd('online', 0);
         }
-        log::add('thekeys', 'debug', 'Ping result ' . $this->getConfiguration('ipfield') . ' ' . $output[0]);
+        log::add('thekeys', 'debug', 'Ping result ' . $cmd . ' : ' . $output[0]);
         return $result;
     }
 
