@@ -25,6 +25,10 @@
             "display": {
 				"generic_type": "DONT"
             },
+            "template": {
+                "dashboard": "line",
+                "mobile": "line"
+            },
             "configuration": {
 				"category": "locker"
             },
