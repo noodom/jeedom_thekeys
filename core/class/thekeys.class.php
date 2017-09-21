@@ -352,7 +352,6 @@ class thekeys extends eqLogic {
   }
 
   public function pingHost () {
-    $cmd = '(sudo echo > /dev/tcp/' .  . '/80) >/dev/null 2>&1 && echo 0 || echo 1';
     $connection = @fsockopen($this->getConfiguration('ipfield'), 80);
     if (is_resource($connection)) {
       $result = true;
