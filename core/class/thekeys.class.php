@@ -164,6 +164,9 @@ class thekeys extends eqLogic {
                 $eqtest->checkCmdOk($share['id'], 'enable', 'digicode', 'Activer');
                 $eqtest->checkCmdOk($share['id'], 'unable', 'digicode', 'Désactiver');
                 $eqtest->checkCmdOk($share['id'], 'status', 'digicode', 'Statut');
+                event::add('thekeys::found', array(
+                  'message' => __('Nouveau partage digicode ' . $share['accessoire']['id_accessoire'], __FILE__),
+                ));
               }
               log::add('thekeys', 'debug', 'Digicode satus : ' . $share['actif']);
               $value = ($share['actif']) ? 1:0;
@@ -272,7 +275,7 @@ class thekeys extends eqLogic {
       $this->save();
       $this->scanLockers();
       event::add('thekeys::found', array(
-        'message' => __('Nouvelle gateway' , __FILE__),
+        'message' => __('Nouveau gateway ' . $this->getName(), __FILE__),
       ));
     }
     if ($this->getConfiguration('type') == 'button' || $this->getConfiguration('type') == 'phone') {
