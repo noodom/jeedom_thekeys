@@ -330,13 +330,16 @@ class thekeys extends eqLogic {
         }
     }
 
-    public function cron15() {
+    public function cron() {
         //scan des lockers par les gateways toutes les 15mn
         foreach (eqLogic::byType('thekeys', true) as $keyeq) {
             if ($keyeq->getConfiguration('type') == 'gateway') {
                 $keyeq->scanLockers();
             }
         }
+    }
+
+    public function cron30() {
         //update des infos de l'API (lockers existants, batterie, status) + verification que les share sont existants
         thekeys::updateUser();
         thekeys::checkShare();
