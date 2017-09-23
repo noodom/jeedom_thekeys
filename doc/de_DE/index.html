@@ -423,6 +423,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_konfiguration">2. Konfiguration</a>
 <ul class="sectlevel3">
 <li><a href="#_plugin_konfiguration">2.1. Plugin Konfiguration</a></li>
+<li><a href="#_configuration_des_équipements">2.2. Configuration des équipements</a></li>
 </ul>
 </li>
 <li><a href="#_faq">3. FAQ</a></li>
@@ -436,7 +437,29 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect3">
 <h4 id="_the_keys_verbundenes_schloss">1.1. The Keys, verbundenes Schloss</h4>
 <div class="paragraph">
-<p>Dieses Plugin erlaubt es, Jeedom mit einem The Keys Gateway zu verbinden, das ein verbundenes Schloss verwaltet.</p>
+<p>Ce plugin permet d&#8217;interconnecter Jeedom avec vos serrures The Key.</p>
+</div>
+<div class="paragraph">
+<p>The Keys propose :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>serrures (le plugin les récupère de votre compte)</p>
+</li>
+<li>
+<p>boutons BLE (le plugin permet de gérer l&#8217;accès avec les serrures)</p>
+</li>
+<li>
+<p>gateway réseau (le plugin permet de l&#8217;utiliser pour les actions directes sur les serrures)</p>
+</li>
+<li>
+<p>digicode (le plugin permet de gérer le statut des accès avec les serrures)</p>
+</li>
+<li>
+<p>application mobile (le plugin permet de gérer le partage des serrures avec les téléphones)</p>
+</li>
+</ul>
 </div>
 <hr>
 </div>
@@ -448,10 +471,47 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect3">
 <h4 id="_plugin_konfiguration">2.1. Plugin Konfiguration</h4>
 <div class="paragraph">
-<p>Das Plugin enthält keine allgemeine Konfiguration.</p>
+<p>Il faut saisir votre compte The Keys dans la page de configuration du plugin.</p>
 </div>
 <div class="paragraph">
-<p>Sie müssen die Adresse, Benutzer und Passwort vom "The Keys" Gateway Gerät konfigurieren.</p>
+<p>Votre nom d&#8217;utilisateur est le numéro de téléphone commencant par +33 sans le 0. Et le mot de passe de l&#8217;app.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_des_équipements">2.2. Configuration des équipements</h4>
+<div class="paragraph">
+<p>Il y a 5 types d&#8217;équipements disponible, tous ne fonctionnent pas pareil dans Jeedom</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>serrure : les serrures sont créées automatiquement par la configuration générale du plugin
+les infos de statut et batterie sont disponible
+deux actions verrouillage et déverouillage sont créées pour chaque gateway ajouter</p>
+</li>
+<li>
+<p>gateway : la gateway est un équipement ajouté manuellement dans le plugin avec son IP et son ID (se référer pour ce dernier à l&#8217;étiquete The Keys)
+une information de présence online est disponible, ainsi qu&#8217;une action refresh qui rescanne les serrures alentour</p>
+</li>
+<li>
+<p>bouton : les boutons d&#8217;accès BLE doivent être ajoutés manuellement avec leur ID
+pour chaque serrure, le bouton aura une information de statut du partage permettant d&#8217;actionner la serrure, et les deux actions d&#8217;activation et désactivation du partage</p>
+</li>
+<li>
+<p>téléphone : le plugin permet d&#8217;ajouter un autre utilisateur à qui on sohaite partager des serrures, l&#8217;ajout est manuel avec le numéro de téléphone (commencant par +33)
+même fonctionnement que les boutons</p>
+</li>
+<li>
+<p>digicode : les équipements digicode sont créés automatiquement, un équipement est créé par partage de l&#8217;app (donc un meme digicode peut etre présent plusieurs fois sur une meme serrure si il y a des codes différents)
+ensuite le fonctionnement est identique aux boutons</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Important : plugin fonctionnement pour les gateway, bouton, téléphone à condition qu&#8217;il n&#8217;y ait qu&#8217;un partage permanent avec chaque. Il faut laisser le plugin le gérer</p>
+</div>
+<div class="paragraph">
+<p>Pour le digicode, il faut créer les partages permanents directement depuis l&#8217;app en choisissant le code dans ce cas particulier</p>
 </div>
 <hr>
 </div>
@@ -463,7 +523,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="openblock panel">
 <div class="title">Stützt sich das Plugin auf eine Cloud-API ?</div><div class="content">
 <div class="paragraph">
-<p>Nein, das Plugin ist in direkter Verbindung mit dem "The Keys" Gateway</p>
+<p>Oui et non, le plugin est en connexion directe avec la gateway The Keys pour les actions de verrouillage et déverrouillage</p>
+</div>
+<div class="paragraph">
+<p>Pour récupérer les serrures et la gestion des partages, c&#8217;est l&#8217;API Cloud qui est utilisée</p>
 </div>
 </div>
 </div>
