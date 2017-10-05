@@ -434,7 +434,7 @@ class thekeys extends eqLogic {
     );
     $fields_string = '';
     foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
-    rtrim($fields_string, '&');
+    $fields_string = substr($fields_string,0,strlen($fields_string)-1);
     curl_setopt($curl,CURLOPT_POST, count($fields));
     curl_setopt($curl,CURLOPT_POSTFIELDS, $fields_string);
     curl_setopt($curl,CURLOPT_RETURNTRANSFER , 1);
