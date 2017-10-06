@@ -70,6 +70,7 @@ class thekeys extends eqLogic {
       log::add('thekeys', 'debug', 'Erreur de connexion gateway');
       return;
     }
+    $key = config::byKey('shares_accessoire','thekeys');
     $idgateway = $this->getConfiguration('idfield');
     $url = 'http://' . $this->getConfiguration('ipfield') . '/lockers';
     $request_http = new com_http($url);
@@ -87,6 +88,10 @@ class thekeys extends eqLogic {
         $thekeys->checkCmdOk($idgateway, 'close', 'locker', 'Verrouillage avec ' . $this->getName());
         $thekeys->checkAndUpdateCmd('battery',$device['battery']/1000);
         $thekeys->batteryStatus($device['battery']/40);
+        $code = $key[$idgateway][$thekeys->getConfiguration('id')]['code'];
+        $output = $this->callGateway('locker_status',$thekeys->getConfiguration('id_serrure'),$code);
+        /*$status = ($output==' 0x31') ? 0 : 1;
+        $thekeys->checkAndUpdateCmd('status',$status);*/
         log::add('thekeys', 'debug', 'Rafraichissement serrure : ' . $device['identifier'] . ' ' . $device['battery'] . ' ' . $device['rssi']);
       }
     }
@@ -393,7 +398,7 @@ class thekeys extends eqLogic {
     $json = json_decode(curl_exec($curl), true);
     curl_close ($curl);
     log::add('thekeys', 'debug', 'Retour : ' . print_r($json, true));
-    return;
+    return $json;
   }
 
   public function callCloud($url,$data = array('format' => 'json')) {
